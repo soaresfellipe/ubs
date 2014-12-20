@@ -129,11 +129,11 @@ public class RelatorioBean implements Serializable {
 
 			// JDBC driver name and database URL
 			String JDBC_DRIVER = "com.mysql.jdbc.Driver";
-			String DB_URL = "jdbc:mysql://mysql.ubs.kinghost.net/ubs06?autoReconnect=true";
+			String DB_URL = "jdbc:mysql://localhost:3306/ubs";
 
 			// Database credentials
-			String USER = "ubs06";
-			String PASS = "a4w7f6q2";
+			String USER = "root";
+			String PASS = "root";
 
 			// STEP 2: Register JDBC driver
 			Class.forName(JDBC_DRIVER);
