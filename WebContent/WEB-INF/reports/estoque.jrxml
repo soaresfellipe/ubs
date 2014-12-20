@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="medicamentosRetiradosPorPeriodo" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="64fbe1fa-144a-4c9c-bb08-d86c942adbf0">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="table">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_CH" mode="Opaque" backcolor="#E6F3FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="Table Dataset 1" uuid="3af6dfd7-3eb9-4906-ab6d-70e43ce1d6d1"/>
+	<parameter name="dtInicio" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="dtFim" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["C:\\Users\\Samanta\\Desktop\\reports\\"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select p.nome as medicamento,p.quantatual, p.quantmin,u.localidade, u.nome as ubs, if(p.quantatual>quantmin,'Estoque ok','Estoque baixo') as situacao
+from PRODUTO p, UBS u
+where p.id_ubs = u.id
+order by u.nome,p.quantatual desc, p.nome;]]>
+	</queryString>
+	<field name="medicamento" class="java.lang.String"/>
+	<field name="quantatual" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="quantmin" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="localidade" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="ubs" class="java.lang.String"/>
+	<field name="situacao" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="102" splitType="Stretch">
+			<rectangle>
+				<reportElement x="6" y="6" width="546" height="91" forecolor="#FFFFFF" backcolor="#C0D9D9" uuid="3c488ce6-44e2-4830-af6c-e7d0c4070317"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="6" y="11" width="130" height="65" forecolor="#0000FF" uuid="9b8a4fd9-ba8e-403b-b6f7-6eb2e4f1cff7"/>
+				<textElement>
+					<font fontName="SansSerif" size="36" isBold="true"/>
+				</textElement>
+				<text><![CDATA[UBS+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="174" y="52" width="312" height="33" uuid="d1fc5882-b4ab-4dd7-a773-8c0b2413e718"/>
+				<textElement>
+					<font fontName="SansSerif" size="24"/>
+				</textElement>
+				<text><![CDATA[Estoque das UBSs]]></text>
+			</staticText>
+			<textField pattern="EEEEE dd MMMMM yyyy">
+				<reportElement x="376" y="11" width="169" height="20" uuid="c5a6b5ae-17f6-42d2-8456-429540273276"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="71" splitType="Stretch">
+			<line>
+				<reportElement x="5" y="36" width="547" height="1" uuid="b23a7943-f4aa-4f90-973b-dccbbc795d19"/>
+				<graphicElement>
+					<pen lineWidth="1.25" lineStyle="Double"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="6" y="40" width="105" height="20" uuid="29f8f0ca-be1b-41ac-b237-91a9c80aeb24"/>
+				<text><![CDATA[Medicamento]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="111" y="40" width="65" height="20" uuid="f635e5e2-d71f-4cd6-abd6-98ffce9d08a8"/>
+				<text><![CDATA[Quant. atual]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="179" y="40" width="79" height="20" uuid="996b92a3-7f9f-4305-96b5-5e284de325f7"/>
+				<text><![CDATA[Quant. mínima]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="265" y="40" width="91" height="20" uuid="e00e55c8-ed8c-477a-b499-8e14ec82c923"/>
+				<text><![CDATA[UBS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="459" y="40" width="96" height="20" uuid="88a1a193-c82f-4062-aadf-06627b45d489"/>
+				<text><![CDATA[situacao]]></text>
+			</staticText>
+			<line>
+				<reportElement x="6" y="61" width="544" height="1" uuid="14b58cf6-40f7-4b94-9eb9-7a9232bf4412"/>
+			</line>
+			<staticText>
+				<reportElement x="359" y="42" width="100" height="20" uuid="f7430504-75d5-4f78-927e-ef130ab984c8"/>
+				<text><![CDATA[Localidade]]></text>
+			</staticText>
+			<line>
+				<reportElement x="106" y="37" width="1" height="24" uuid="e19d9550-3310-4b78-bfc1-6c6ad40eb490"/>
+			</line>
+			<line>
+				<reportElement x="174" y="37" width="1" height="24" uuid="ed46f66f-d967-45a4-bf50-e9e0a6694d61"/>
+			</line>
+			<line>
+				<reportElement x="257" y="37" width="1" height="24" uuid="beaceb39-4b55-424f-925f-9dff6f6b8392"/>
+			</line>
+			<line>
+				<reportElement x="356" y="36" width="1" height="24" uuid="cf5529c8-c46a-46a6-9bfc-9d30fe72de5c"/>
+			</line>
+			<line>
+				<reportElement x="456" y="37" width="1" height="24" uuid="f519ddbf-e269-4823-98ce-eb8c37ce90ac"/>
+			</line>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="22" splitType="Stretch">
+			<textField>
+				<reportElement x="6" y="0" width="105" height="20" uuid="192d8bd1-2828-4a78-83e6-59cac2306cf4"/>
+				<textFieldExpression><![CDATA[$F{medicamento}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="111" y="0" width="65" height="20" uuid="a8d03832-e7c3-48a8-a021-bd380ef62d24"/>
+				<textFieldExpression><![CDATA[$F{quantatual}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="179" y="0" width="79" height="20" uuid="ae086900-3f7b-4434-bd07-536333ff8b60"/>
+				<textFieldExpression><![CDATA[$F{quantmin}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="266" y="0" width="90" height="20" uuid="7f960c6b-c612-4410-b556-a9c418e12b54"/>
+				<textFieldExpression><![CDATA[$F{ubs}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="459" y="0" width="96" height="20" uuid="7812d752-c6ac-4a2a-9554-ed446d371159"/>
+				<textFieldExpression><![CDATA[$F{situacao}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="356" y="0" width="100" height="20" uuid="20ce1b9c-9124-4720-a515-6924728e176b"/>
+				<textFieldExpression><![CDATA[$F{localidade}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="44" splitType="Stretch">
+			<textField>
+				<reportElement x="423" y="17" width="80" height="20" uuid="55759ae8-3ee6-45cb-b044-ccda843c2653"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="510" y="17" width="40" height="20" uuid="87740320-a707-49b4-8836-60c1ade9f858"/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>

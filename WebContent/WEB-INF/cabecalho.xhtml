@@ -1,0 +1,47 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	<div id="topo">
+		<h:form id="frmTopo">
+
+			<!-- @Fellipe - Exibe mensagem na tela -->
+			<p:growl id="messages" showDetail="true" sticky="true" />
+
+			<div id="topoEsquerda">
+				<a href="principal.xhtml"><img width="120" height="40"
+					src="/ubs/resources/images/ubs-logo.gif"></img></a> <br /> <br />
+				<p:clock rendered="true" pattern="dd.MM.yyyy HH:mm:ss" mode="server" />
+			</div>
+			<div id="topoDireita">
+				<br />
+				<p:outputLabel value="Logado como: " />
+				<p:outputLabel value="#{login.usuario.nome}" />
+				<p:commandLink style="text-decoration:none;" value="  [Sair]"
+					action="#{login.logout}">
+					<p:confirm header="Confirmação"
+						message="Tem certeza que deseja sair?" icon="ui-icon-alert" />
+				</p:commandLink>
+				<br />
+				<p:outputLabel value="Tipo de Perfil: " />
+				<p:outputLabel value="#{login.perfil}" />
+			</div>
+			<div id="clear">
+				<p:separator />
+			</div>
+
+			<!-- Dialog de Logout -->
+
+			<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+				<p:commandButton value="Sim" type="button"
+					styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+				<p:commandButton value="Não" type="button"
+					styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+			</p:confirmDialog>
+
+		</h:form>
+	</div>
+</ui:composition>

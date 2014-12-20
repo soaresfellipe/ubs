@@ -1,0 +1,141 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:head>
+	<title>Histórico de Exames - UBS+ Web</title>
+</h:head>
+<h:body>
+	<h:outputStylesheet library="css" name="ubs.css" />
+	<ui:include src="/WEB-INF/cabecalho.xhtml" />
+	<p:panel id="panelExames" header="Exames por Paciente">
+		<h:form id="frmPesquisaExame">
+
+			<br />
+			<h:outputText for="status" value="Status do Exame: " />
+			<p:selectOneRadio id="status" value="#{exameBean.status}">
+				<f:selectItem itemLabel="Concluido" itemValue="Concluido" />
+				<f:selectItem itemLabel="Pendente" itemValue="Pendente" />
+			</p:selectOneRadio>
+			<br />
+			<p:commandButton value="Atualizar Histórico" update="tabelaExame"
+				action="#{exameBean.atualizaTabelaExame}" />
+			<br />
+			<br />
+			<p:dataTable var="exame" id="tabelaExame" value="#{exameBean.lista}"
+				rowKey="#{exame.id}"
+				emptyMessage="Nenhum dado encontrado para os valores informados">
+
+				<p:column headerText="Paciente">
+					<h:outputText value="#{exame.paciente.pessoa.nome}" />
+				</p:column>
+				<p:column headerText="Procedimento">
+					<h:outputText value="#{exame.procedimento.nome}" />
+				</p:column>
+				<p:column headerText="Data de Realização"
+					style="width:100px;text-align: center">
+					<h:outputText value="#{exame.dtRealizacao}">
+						<f:convertDateTime pattern="dd/MM/yyyy" />
+					</h:outputText>
+				</p:column>
+				<p:column headerText="Status" style="width:50px;">
+					<h:outputText value="#{exame.status}" />
+				</p:column>
+
+				<p:column headerText="Mostrar"
+					style="width:50px; text-align: center">
+					<p:commandButton oncomplete="PF('dlgExameDetalhe').show()"
+						action="#{exameBean.exameDetalhe}" update=":frmExameDetalhe"
+						icon="ui-icon-search" title="Visualizar">
+						<f:setPropertyActionListener value="#{exame}"
+							target="#{exameBean.exame}" />
+					</p:commandButton>
+				</p:column>
+
+			</p:dataTable>
+		</h:form>
+
+		<!-- @Fellipe: Dialog de Detalhamento do Exame -->
+		<p:dialog id="dlgExameDetalhe" widgetVar="dlgExameDetalhe"
+			header="Detalhamento do Exame" modal="TRUE" draggable="FALSE"
+			resizable="FALSE">
+			<h:form id="frmExameDetalhe">
+				<p:panel>
+					<p:outputLabel for="nomePaciente" value="Nome do Paciente: " />
+					<br />
+					<p:inputText id="nomePaciente" size="100" readonly="TRUE"
+						value="#{exameBean.exame.paciente.pessoa.nome}" />
+					<p:spacer width="25" />
+					<br />
+
+					<p:outputLabel for="dataNascimento" value="Data de Nascimento: " />
+					<p:calendar id="dataNascimento" size="10" disabled="TRUE"
+						value="#{exameBean.exame.paciente.pessoa.dtNascimento}"
+						readonly="TRUE" pattern="dd/MM/yyyy" />
+
+					<p:spacer width="25" />
+
+					<h:outputLabel for="cpf" value="CPF: " />
+					<p:inputMask id="cpf" size="20" maxlenght="11"
+						value="#{exameBean.exame.paciente.pessoa.cpf}"
+						mask="999.999.999-99" required="FALSE" readonly="TRUE" />
+
+					<p:spacer width="25" />
+
+					<h:outputLabel for="codsus" value="Código SUS: " />
+					<p:inputText
+						value="#{exameBean.exame.paciente.pessoa.paciente.cns}"
+						id="codsus" size="12" readonly="TRUE" />
+
+					<br />
+					<br />
+				</p:panel>
+				<p:panel>
+					<p:outputLabel for="nomeProcedimento"
+						value="Procedimento Executado: " />
+					<br />
+					<p:inputText value="#{exameBean.exame.procedimento.nome}"
+						id="nomeProcedimento" size="100" readonly="TRUE" />
+					<p:spacer width="25" />
+					<br />
+					<br />
+					<p:outputLabel for="dtRealizacao" value="Data de Realização: " />
+					<p:calendar id="dtRealizacao"
+						value="#{exameBean.exame.dtRealizacao}" size="10"
+						pattern="dd-MM-yyyy" readonly="TRUE" disabled="TRUE" />
+				</p:panel>
+				<p:panel>
+					<p:outputLabel for="varproc" value="Variáveis do Procedimento: " />
+					<br />
+					<br />
+					<p:dataTable id="varproc" var="varproc" style="width:400px;"
+						emptyMessage="Nenhuma variável para este procedimento"
+						value="#{exameBean.listaVarResultado}" editable="FALSE">
+
+						<p:column style="width:300px;" headerText="Variável">
+							<h:outputText value="#{varproc.variavel.nome}" />
+						</p:column>
+						<p:column style="width:100px;" headerText="Valor do Resultado">
+							<p:inputText disabled="TRUE" size="11" value="#{varproc.valor}" />
+						</p:column>
+					</p:dataTable>
+					<br />
+					<p:commandButton id="btnFecharExame"
+						styleClass="ui-priority-primary" value="Fechar Exame"
+						onclick="PF('dlgExameDetalhe').close()" />
+
+					<p:commandButton id="btnGerarExame"
+						styleClass="ui-priority-primary" value="Gerar Exame"
+						action="#{relatorioBean.exame(exameBean.exame)}"  ajax="false"/>
+				</p:panel>
+			</h:form>
+		</p:dialog>
+
+		<ui:include src="/WEB-INF/rodape.xhtml" />
+	</p:panel>
+</h:body>
+</html>

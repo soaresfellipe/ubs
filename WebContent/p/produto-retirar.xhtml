@@ -1,0 +1,142 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:head>
+	<title>Estoque - UBS+ Web</title>
+</h:head>
+<h:body>
+
+	<h:outputStylesheet library="css" name="ubs.css" />
+	<ui:include src="/WEB-INF/cabecalho.xhtml" />
+
+	<h:form id="frmPrincipal">
+		<p:panel header="Dados do pedido">
+			<p:growl id="message" showDetail="true" life="3000" sticky="false" />
+
+			<p:panelGrid columns="5">
+				<p:outputLabel for="func" value="Funcionário solicitante: " />
+				<p:selectOneMenu id="func" value="#{produtoMedicamentoBean.func.id}">
+					<f:selectItem itemLabel="Selecionar Funcionario" itemValue=""
+						noSelectionOption="false" />
+					<f:selectItems value="#{produtoMedicamentoBean.listaFunc}"
+						var="func" itemLabel="#{func.pessoa.nome}" itemValue="#{func.id}" />
+				</p:selectOneMenu>
+				
+				<p:columnGroup>
+					<p:inputText id="produto"
+						value="#{produtoMedicamentoBean.prod.nome}" disabled="true" />
+					<p:commandButton action="#{produtoMedicamentoBean.findByNome()}"
+						onclick="PF('dlgPesquisarProduto').show();" icon="ui-icon-search">
+					</p:commandButton>
+				</p:columnGroup>
+
+				<p:columnGroup>
+					<p:outputLabel value="Quantidade: "
+						style="color:gray;font-weight:bold" />
+					<p:inputText id="quantidade"
+						value="#{produtoMedicamentoBean.quant}" size="5" />
+				</p:columnGroup>
+
+				<p:columnGroup>
+					<p:commandButton action="#{produtoMedicamentoBean.populaLista()}"
+						update=":frmPrincipal,:frmPrincipal:message" value="Incluir no Pedido" />
+				</p:columnGroup>
+
+			</p:panelGrid>
+			<br />
+			<p:dataTable id="resultadoBusca"
+				value="#{produtoMedicamentoBean.itens}" var="itens">
+
+				<f:facet name="header">  
+            	Click na linha e depois click em "Mais" para ver detalhes  
+        	</f:facet>
+				<p:column headerText="Nome">
+					<h:outputText value="#{itens.produto.nome}" />
+				</p:column>
+				<p:column headerText="Quantidade ">
+					<h:outputText value="#{itens.quant}" />
+				</p:column>
+			</p:dataTable>
+			<br />
+			<p:toolbar style="width:527px;">
+				<f:facet name="left">
+					<p:commandButton value="Salvar" id="btSalvarAlt" update="message,frmPrincipal"
+						action="#{produtoMedicamentoBean.salvarPedido()}"
+						icon="ui-icon-disk">
+					</p:commandButton>
+				</f:facet>
+				<f:facet name="right">
+					<p:commandButton value="Cancelar" id="btCancelar"
+						action="produto.xhtml?redirect=true"
+						actionListener="#{produtoMedicamentoBean.cancelar()}"
+						icon="ui-icon-close">
+					</p:commandButton>
+				</f:facet>
+			</p:toolbar>
+
+		</p:panel>
+	</h:form>
+
+	<p:dialog header="Pesquisar Produtos" widgetVar="dlgPesquisarProduto"
+		modal="true">
+		<h:form id="frmBusca">
+
+			<p:focus />
+			<h:outputLabel for="idnome" value="Pesquisar por Nome: "
+				style="font-size: 20px; text-decoration: bold;" />
+
+			<p:inputText maxlenght="50" size="50" id="idnome" required="FALSE"
+				value="#{produtoMedicamentoBean.nome}">
+				<p:ajax event="keyup"
+					listener="#{produtoMedicamentoBean.findByNome()}"
+					update="resultadoBusca" />
+			</p:inputText>
+
+			<p:spacer height="25" />
+
+			<br />
+
+			<br />
+			<br />
+			<!--  Tabela com resultado da busca por nome -->
+			<p:dataTable id="resultadoBusca"
+				value="#{produtoMedicamentoBean.listaProdutos}" var="prod"
+				selection="#{produtoMedicamentoBean.prod}" selectionMode="single"
+				rowKey="#{prod.id}">
+
+
+				<f:facet name="header">  
+            	Click na linha e depois click em "Mais" para ver detalhes  
+        	</f:facet>
+				<p:column headerText="Nome">
+					<h:outputText value="#{prod.nome}" />
+				</p:column>
+				<p:column headerText="Data Validade">
+					<h:outputText value="#{prod.dtValidade}">
+						<f:convertDateTime pattern="dd/MM/yyyy" />
+					</h:outputText>
+				</p:column>
+				<p:column headerText="Quantidade Atual">
+					<h:outputText value="#{prod.quantAtual},#{prod.unidadeMedida}" />
+				</p:column>
+				<p:column headerText="Quantidade Mínima">
+					<h:outputText value="#{prod.quantMin},#{prod.unidadeMedida}" />
+				</p:column>
+
+
+				<f:facet name="footer">
+					<p:commandButton value="Escolher"
+						onclick="dlgPesquisarProduto.close()" update=":frmPrincipal">
+					</p:commandButton>
+				</f:facet>
+			</p:dataTable>
+		</h:form>
+
+	</p:dialog>
+</h:body>
+</html>

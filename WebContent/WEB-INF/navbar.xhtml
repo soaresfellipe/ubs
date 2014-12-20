@@ -1,0 +1,29 @@
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+	<h:form>
+		<p:growl id="messages" />
+
+		<p:menubar>
+			<p:menuitem value="Inicio" icon="ui-icon-home" />
+			<p:submenu label="Áreas" icon="ui-icon-circle-triangle-s">
+				<p:menuitem value="Paciente" url="pessoa.xhtml" icon="ui-icon-person" />
+				<p:menuitem value="Atendente" url="#" icon="ui-icon-comment" />
+				<p:menuitem value="Médico" url="#" icon="ui-icon-circle-plus" />
+				<p:menuitem value="Farmácia" url="" icon="ui-icon-clipboard" />
+				<p:menuitem value="Enfermeiro" url="enfermaria.xhtml" icon="ui-icon-clipboard" />
+				<p:menuitem value="Estoquista" url="estoque.xhtml" icon="ui-icon-grip-dotted-vertical" />
+				<p:menuitem value="Administrador" url="#" icon="ui-icon-suitcase" />
+			</p:submenu>
+
+
+
+			<f:facet name="options">
+				<p:commandButton type="button" value="Sair" icon="ui-icon-extlink" />
+			</f:facet>
+		</p:menubar>
+	</h:form>
+</ui:composition>

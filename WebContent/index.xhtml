@@ -1,0 +1,49 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:head>
+	<title>Login | UBS+</title>
+</h:head>
+<h:body onload="document.content.dialog.login.usuario.focus();">
+	<div id="content" title="UBS+ Login">
+		<p:dialog header="UBS+ Web - Autenticação" id="dialog" minWidth="420" width="420"
+			modal="true" closable="false" position="center" draggable="FALSE"
+			resizable="false" visible="true">
+			<center>
+				<h:form name='formularioLogin' method="post">
+					<p:messages id="messages" showDetail="true" autoUpdate="true"
+						closable="true" />
+					<p:panelGrid columns="2">
+						<h:outputLabel for="usuario" value="CPF: " />
+						<p:inputText id="usuario" value="#{login.usuario.cpf}"
+							requerid="true" maxlength="11" />
+
+						<h:outputLabel for="dataNasc" value="Data de Nascimento: " />
+						<p:calendar id="dataNasc" value="#{login.usuario.dtNascimento}"
+							requerid="true" showOn="button" pattern="dd/MM/yyyy" />
+
+						<h:outputLabel for="senha" value="Senha: " />
+						<p:password id="senha" value="#{login.usuario.senha}"
+							requerid="true" />
+
+						<f:facet name="footer">
+							<p:row>
+								<p:outputPanel style="width: 100%; text-align:center"
+									layout="block">
+									<p:commandButton id="btnLoginEntrar" value="Entrar"
+										ajax="false" action="#{login.validar}" />
+									<input name="esqueci" type="submit" value="Esqueci a senha" />
+								</p:outputPanel>
+							</p:row>
+						</f:facet>
+					</p:panelGrid>
+				</h:form>
+			</center>
+		</p:dialog>
+	</div>
+</h:body>
+</html>

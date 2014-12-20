@@ -1,0 +1,108 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	<div id="lateral">
+		<h:form>
+			<p:growl autoUpdate="true" />
+			<p:panelMenu style="width:250px">
+				<c:if
+					test="#{(login.perfil == 'Administrador') || (login.perfil == 'Atendente')}">
+					<p:submenu label="Pessoas Físicas">
+						<p:menuitem value="Pesquisa de Pessoas" url="pessoa.xhtml" />
+						<p:menuitem value="Cadastro de Pessoas"
+							url="pessoa-cadastro.xhtml" />
+					</p:submenu>
+				</c:if>
+				<p:separator />
+				<c:if
+					test="#{(login.perfil == 'Administrador') || (login.perfil == 'Atendente')}">
+					<p:submenu label="Atendimento">
+						<p:menuitem value="Agendar Consulta" url="agenda.xhtml" />
+						<p:menuitem value="Gerar Agenda para UBS x Médico"
+							url="agenda-ubs-medico.xhtml" />
+					</p:submenu>
+				</c:if>
+				<p:separator />
+				<c:if
+					test="#{(login.perfil == 'Administrador') || (login.perfil == 'Médico') || (login.perfil == 'Analista Clínico')}">
+					<p:submenu label="Dados Médicos">
+						<c:if
+							test="#{(login.perfil == 'Administrador') || (login.perfil == 'Médico')}">
+							<p:menuitem value="Agenda do Dia" url="agenda-medico.xhtml" />
+						</c:if>
+						<c:if
+							test="#{(login.perfil == 'Administrador') || (login.perfil == 'Analista Clínico')}">
+							<p:menuitem value="Resultado de Exames"
+								url="exame-paciente.xhtml" />
+						</c:if>
+					</p:submenu>
+				</c:if>
+				<p:separator />
+				<c:if
+					test="#{(login.perfil == 'Administrador') || (login.perfil == 'Estoquista')|| (login.perfil == 'Farmacêutico')|| (login.perfil == 'Enfermeiro')}">
+					<p:submenu label="Produtos e Medicamentos">
+						<c:if
+							test="#{(login.perfil == 'Administrador') || (login.perfil == 'Estoquista')}">
+							<p:menuitem value="Produtos" url="produto.xhtml" />
+						</c:if>
+						<c:if
+							test="#{(login.perfil == 'Administrador') || (login.perfil == 'Estoquista')}">
+							<p:menuitem value="Medicamentos" url="medicamento.xhtml" />
+						</c:if>
+						<c:if
+							test="#{(login.perfil == 'Administrador') || (login.perfil == 'Farmacêutico')}">
+							<p:menuitem value="Farmácia" url="farmacia.xhtml" />
+						</c:if>
+						<c:if
+							test="#{(login.perfil == 'Administrador') || (login.perfil == 'Enfermeiro')}">
+							<p:menuitem value="Enfermaria" url="enfermaria.xhtml" />
+						</c:if>
+					</p:submenu>
+				</c:if>
+				<p:separator />
+				<c:if
+					test="#{(login.perfil == 'Administrador') || (login.perfil == 'Enfermeiro')}">
+					<p:submenu label="Vacinação">
+						<p:menuitem value="Caderneta de Vacinação"
+							url="vacina-caderneta.xhtml" />
+						<c:if test="#{(login.perfil == 'Administrador')}">
+							<p:menuitem value="Cadastro de Vacinas e Doses"
+								url="vacina-cadastro.xhtml" />
+						</c:if>
+					</p:submenu>
+				</c:if>
+				<p:separator />
+				<c:if test="#{(login.perfil == 'Administrador')}">
+					<p:submenu label="Administração">
+						<p:menuitem value="Cadastro de UBS" url="ubs.xhtml" />
+						<p:submenu label="Análise Clínica">
+							<p:menuitem value="Procedimentos de Exame"
+								url="procedimento.xhtml" />
+							<p:menuitem value="Grupo de Procedimentos"
+								url="grupo-procedimento.xhtml" />
+							<p:menuitem value="Cadastro de Variáveis"
+								url="exame-variavel.xhtml" />
+						</p:submenu>
+						<p:menuitem value="Especialidades Médicas"
+							url="especialidade.xhtml" />
+						<p:menuitem value="Gerar Relatórios" url="relatorios.xhtml" />
+					</p:submenu>
+				</c:if>
+				<c:if
+					test="#{(login.perfil == 'Administrador') || (login.perfil == 'Paciente')}">
+					<p:submenu label="Paciente">
+						<p:menuitem value="Consultas" url="paciente-consulta.xhtml" />
+						<p:menuitem value="Histórico de Exames"
+							url="paciente-hist-exame.xhtml" />
+						<p:menuitem value="Prontuário"
+							url="paciente-hist-prontuario.xhtml" />
+						<p:menuitem value="Receitas" url="paciente-hist-receita.xhtml" />
+					</p:submenu>
+				</c:if>
+			</p:panelMenu>
+		</h:form>
+	</div>
+</ui:composition>

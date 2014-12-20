@@ -1,0 +1,201 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:head>
+	<title>Agenda - UBS+ Web</title>
+</h:head>
+<h:body>
+	<h:outputStylesheet library="css" name="ubs.css" />
+	<ui:include src="/WEB-INF/cabecalho.xhtml" />
+	<h3 id="titulopagina">Agenda da UBS</h3>
+
+	<!-- Dados de Pesquisa  -->
+
+	<h:form id="frm">
+
+		<p:growl id="message" showDetail="true" life="3000" sticky="false" />
+		
+		Filtros de Pesquisa:
+		<p:panelGrid columns="10" id="pnl">
+
+			<h:outputLabel for="ubs" value="UBS: " />
+			<p:selectOneMenu id="ubs" value="#{agendaBean.ubs.id}">
+				<f:selectItem itemLabel="Selecionar a UBS" itemValue=""
+					noSelectionOption="false" />
+				<f:selectItems value="#{agendaBean.listaUBSBusca}" var="ubs"
+					itemValue="#{ubs.id}" itemLabel="#{ubs.nome}" />
+				<p:ajax event="change" listener="#{agendaBean.visualizarAgenda}"
+					update="espec" />
+			</p:selectOneMenu>
+
+			<h:outputLabel for="espec" value="Especialidade: " />
+			<p:selectOneMenu id="espec" value="#{agendaBean.esp.id}">
+				<f:selectItem itemLabel="Selecionar a Especialidade" itemValue=""
+					noSelectionOption="false" />
+				<f:selectItems value="#{agendaBean.listEsp}" var="esp"
+					itemValue="#{esp.id}" itemLabel="#{esp.nome}" />
+				<p:ajax event="change" listener="#{agendaBean.visualizarAgenda}"
+					update="medico" />
+			</p:selectOneMenu>
+
+			<h:outputLabel for="medico" value="Médico: " />
+			<p:selectOneMenu id="medico" value="#{agendaBean.medico.id}">
+				<f:selectItem itemLabel="Selecionar Médico" itemValue=""
+					noSelectionOption="false" />
+				<f:selectItems value="#{agendaBean.listaMed}" var="med"
+					itemValue="#{med.id}" itemLabel="#{med.pessoa.nome}" />
+			</p:selectOneMenu>
+
+			<h:outputLabel for="data" value="Data: " />
+			<p:calendar id="data" pattern="dd-MM-yyyy" mask="true"
+				value="#{agendaBean.data}" />
+
+			<p:commandButton value="Atualizar"
+				action="#{agendaBean.visualizarAgenda2}" update="dtAgenda" />
+
+			<p:commandButton value="Incluir Encaixe"
+				action="agenda-encaixe.xhtml?faces-redirect=true" />
+		</p:panelGrid>
+		<p:separator />
+
+		<p:dataTable var="agenda" id="dtAgenda"
+			value="#{agendaBean.listaAgendaDia}" selection="#{agendaBean.agenda}"
+			selectionMode="single" rowKey="#{agenda.id}">
+			<p:column headerText="Data">
+				<p:calendar value="#{agenda.data}" pattern="dd/MM/yyyy"
+					readonly="true" size="8" />
+			</p:column>
+			<p:column headerText="Hora Início">
+				<p:calendar value="#{agenda.horaInicio.time}" pattern="HH:mm"
+					readonly="true" size="5">
+				</p:calendar>
+			</p:column>
+			<p:column headerText="Hora Fim">
+				<p:calendar value="#{agenda.horaFim}" pattern="HH:mm"
+					readonly="true" size="5" />
+			</p:column>
+			<p:column headerText="Médico">
+				<h:outputText value="#{agenda.medico.pessoa.nome}" />
+			</p:column>
+			<p:column headerText="Especialidade">
+				<h:outputText value="#{agenda.especialidade.nome}" />
+			</p:column>
+			<p:column headerText="Paciente">
+				<h:outputText value="#{agenda.paciente.pessoa.nome}" />
+			</p:column>
+			<p:column headerText="Status">
+				<h:outputText value="#{agenda.status}" />
+			</p:column>
+			<p:column headerText="Ação">
+				<p:commandButton disabled="#{!(agenda.paciente == null)}"
+					oncomplete="PF('dlgPesquisaPaciente').show()"
+					value="Incluir Paciente" update=":frm:message">
+					<f:setPropertyActionListener value="#{agenda}"
+						target="#{agendaBean.agenda}" />
+				</p:commandButton>
+				<p:commandButton disabled="#{(agenda.status == 'Falta')}"
+					oncomplete="PF('dlgCancelamento').show()" value="Falta"
+					update=":frm:message">
+					<f:setPropertyActionListener value="#{agenda}"
+						target="#{agendaBean.agenda}" />
+				</p:commandButton>
+			</p:column>
+
+			<f:facet name="footer">
+				<p:commandButton value="Cadastrar Horários Agenda"
+					action="agenda-ubs-medico.xhtml?faces-redirect=true" ajax="false" />
+				<p:commandButton value="Ver detalhe"
+					action="#{agendaBeanRequest.dadosView(agendaBean.agenda)}"
+					update=":frm:message" />
+				<p:commandButton value="Excluir Consulta"
+					onclick="PF('dlgExclusao').show();" update=":frm:message" />
+				<p:commandButton value="Desmarcar Paciente"
+					action="#{agendaBean.desmarcarConsulta}"
+					update=":frm:dtAgenda,:frm:message" />
+			</f:facet>
+		</p:dataTable>
+	</h:form>
+
+	<p:dialog id="dlgPesquisaPaciente" header="Pesquisa de Paciente"
+		widgetVar="dlgPesquisaPaciente" height="400" width="600" modal="TRUE"
+		draggable="FALSE" resizable="FALSE">
+		<h:form id="pesqPaciente">
+
+			<p:spacer width="25" />
+			<p:outputLabel for="nomePaciente" value="Nome Paciente: " />
+
+			<p:inputText id="nomePaciente" value="#{agendaBean.nomePaciente}">
+				<p:ajax event="keyup" listener="#{agendaBean.buscaPaciente()}"
+					update="buscaPaciente" />
+			</p:inputText>
+
+			<p:spacer width="25" />
+			<p:dataTable id="buscaPaciente" value="#{agendaBean.listPaciente}"
+				var="pac" selection="#{agendaBean.paciente}" selectionMode="single"
+				rowKey="#{pac.id}">
+				<p:column headerText="Nome">
+					<h:outputText value="#{pac.pessoa.nome}" />
+				</p:column>
+				<p:column headerText="COD_SUS">
+					<h:outputText value="#{pac.cns}" />
+				</p:column>
+				<p:column headerText="CPF">
+					<h:outputText value="#{pac.pessoa.cpf}" />
+				</p:column>
+				<f:facet name="footer">
+					<p:commandButton value="Escolher"
+						onclick="PF('dlgPesquisaPaciente').close();"
+						action="#{agendaBean.associarPaciente}"
+						update=":frm:dtAgenda,:frm:message">
+					</p:commandButton>
+				</f:facet>
+			</p:dataTable>
+		</h:form>
+	</p:dialog>
+	<p:dialog id="dlgCancelamento" header="Confirmar Cancelamento"
+		widgetVar="dlgCancelamento" modal="TRUE" draggable="FALSE"
+		resizable="FALSE">
+		<h:form id="canc">
+			<p:outputLabel for="justCancelamento"
+				value="Justificativa para Cancelamento: " />
+			<br />
+			<br />
+			<p:inputTextarea id="justCancelamento" value="#{agendaBean.just}"
+				style="width:350px; height:100px;" />
+			<br />
+			<br />
+			<center>
+				<p:commandButton value="Confirmar" icon="ui-icon-check"
+					oncomplete="PF('dlgCancelamento').hide();"
+					update=":frm:dtAgenda,:frm:message" action="#{agendaBean.cancelar}" />
+			</center>
+		</h:form>
+	</p:dialog>
+	<p:dialog id="dlgExclusao" header="Confirmar Exclusão"
+		widgetVar="dlgExclusao" modal="TRUE" draggable="FALSE"
+		resizable="FALSE">
+		<h:form id="EXC">
+			<p:outputLabel for="justExclusao"
+				value="Justificativa para Exclusao: " />
+			<br />
+			<br />
+			<p:inputTextarea id="justExclusao" value="#{agendaBean.justExclusao}"
+				style="width:350px; height:100px;" />
+			<br />
+			<br />
+			<center>
+				<p:commandButton value="Confirmar" icon="ui-icon-check"
+					oncomplete="PF('dlgExclusao').hide();"
+					update=":frm:dtAgenda,:frm:message" action="#{agendaBean.excluir}" />
+			</center>
+		</h:form>
+	</p:dialog>
+
+	<ui:include src="/WEB-INF/rodape.xhtml" />
+</h:body>
+</html>

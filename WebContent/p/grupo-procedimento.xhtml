@@ -1,0 +1,112 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:head>
+	<title>Grupo de Procedimentos - UBS+ Web</title>
+</h:head>
+<h:body>
+	<h:outputStylesheet library="css" name="ubs.css" />
+	<ui:include src="/WEB-INF/cabecalho.xhtml" />
+	<p:panel>
+		<h3 id="titulopagina">Grupo de Procedimentos</h3>
+
+		<h:form id="frmGrupo">
+
+			<p:growl id="message" showDetail="true" life="3000" sticky="false" />
+
+			<p:dataTable id="idResultadoBusca" var="grupo" style="width:700px"
+				value="#{grupoProcBean.listarGrupo}" editable="true">
+
+				<p:ajax event="rowEdit" listener="#{grupoProcBean.onRowEdit}"
+					update="idResultadoBusca, :frmGrupo:message" />
+				<p:ajax event="rowEditCancel"
+					listener="#{grupoProcBean.onRowCancel}"
+					update="idResultadoBusca,:frmGrupo:message" />
+
+				<!-- Campo Nome do Grupo -->
+
+				<p:column headerText="Nome do Grupo">
+					<p:cellEditor>
+						<f:facet name="output">
+							<h:outputText value="#{grupo.nome}" />
+						</f:facet>
+						<f:facet name="input">
+							<h:inputText value="#{grupo.nome}" />
+						</f:facet>
+					</p:cellEditor>
+				</p:column>
+
+				<!-- Campo Código TUSS -->
+
+				<p:column headerText="Código TUSS">
+					<p:cellEditor>
+						<f:facet name="output">
+							<h:outputText value="#{grupo.codigoTuss}" />
+						</f:facet>
+						<f:facet name="input">
+							<h:outputText value="#{grupo.codigoTuss}" />
+						</f:facet>
+					</p:cellEditor>
+				</p:column>
+
+				<!-- Campo para Edição -->
+
+				<p:column style="width:32px">
+					<p:rowEditor />
+				</p:column>
+
+				<f:facet name="footer">
+					<p:commandButton id="btChamaDlgCadastro" value="Novo Grupo"
+						onclick="PF('dlgCadastro').show();" />
+				</f:facet>
+
+			</p:dataTable>
+
+		</h:form>
+
+		<p:dialog header="Cadastro" widgetVar="dlgCadastro" modal="true">
+			<h:form id="frmCadastro">
+
+				<p:outputLabel id="lbNomeEdit" value="Nome: " />
+				<p:inputText id="txtNomeEdit" value="#{grupoProcBean.grupo.nome}" />
+
+				<p:outputLabel id="lbTUSSEdit" value="Código TUSS: " />
+				<p:inputText id="txtTUSSEdit"
+					value="#{grupoProcBean.grupo.codigoTuss}" />
+
+				<p:commandButton id="btSalvar" value="Salvar" ajax="false"
+					actionListener="#{grupoProcBean.salvar}"
+					onclick="dlgCadastro.close()" update=":frmGrupo:message">
+				</p:commandButton>
+
+			</h:form>
+		</p:dialog>
+
+		<p:dialog header="Editar" widgetVar="dlgEditar" modal="true">
+			<h:form id="frmEditar">
+
+				<p:outputLabel id="lbNomeEdit" value="Nome: " />
+				<p:inputText id="txtNomeEdit" value="#{grupoProcBean.grupo.nome}" />
+				<p:separator />
+				<p:outputLabel id="lbTUSSEdit" value="Código TUSS: " />
+				<p:inputText id="txtTUSSEdit"
+					value="#{grupoProcBean.grupo.codigoTuss}" />
+
+				<p:commandButton id="btEditar" value="Salvar"
+					actionListener="#{grupoProcBean.editar}"
+					onclick="dlgEditar.close()" update=":frmGrupo:message">
+				</p:commandButton>
+
+			</h:form>
+		</p:dialog>
+
+
+		<ui:include src="/WEB-INF/rodape.xhtml" />
+	</p:panel>
+</h:body>
+</html>

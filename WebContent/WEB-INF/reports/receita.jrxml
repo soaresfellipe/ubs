@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="medicamentosRetiradosPorPeriodo" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="64fbe1fa-144a-4c9c-bb08-d86c942adbf0">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="table">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_CH" mode="Opaque" backcolor="#E6F3FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="Table Dataset 1" uuid="3af6dfd7-3eb9-4906-ab6d-70e43ce1d6d1"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["C:\\Users\\Samanta\\Desktop\\reports\\"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="idReceita" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select r.*, u.nome,p.unidademedida, p.nome AS PRODUTO, pe.nome AS pessoa, pe.cpf
+from RECEITA r  LEFT OUTER JOIN PRODUTO p on (r.id_medicamento = p.id), UBS u, AGENDA a,PESSOA pe, PACIENTE pa
+where r.id = $P{idReceita}
+and r.id_agenda = a.id
+and a.id_ubs = u.id
+and r.id_paciente = pa.id
+and pe.id = pa.id_pessoa]]>
+	</queryString>
+	<field name="ID" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="DESCRICAO" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="DTCRIACAO" class="java.sql.Date">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="DTENCERRAMENTO" class="java.sql.Timestamp">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="DTVALIDADE" class="java.sql.Date">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="QUANT" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="STATUS" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="TIPOATENDIMENTO" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="ID_AGENDA" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="ID_ATENDENTE" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="ID_MEDICAMENTO" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="ID_PACIENTE" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="nome" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="unidademedida" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="PRODUTO" class="java.lang.String"/>
+	<field name="pessoa" class="java.lang.String"/>
+	<field name="cpf" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="99" splitType="Stretch">
+			<rectangle>
+				<reportElement x="6" y="6" width="546" height="91" forecolor="#FFFFFF" backcolor="#C0D9D9" uuid="3c488ce6-44e2-4830-af6c-e7d0c4070317"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="11" y="12" width="130" height="65" forecolor="#0000FF" uuid="9b8a4fd9-ba8e-403b-b6f7-6eb2e4f1cff7"/>
+				<textElement>
+					<font fontName="SansSerif" size="36" isBold="true"/>
+				</textElement>
+				<text><![CDATA[UBS+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="196" y="52" width="128" height="33" uuid="d1fc5882-b4ab-4dd7-a773-8c0b2413e718"/>
+				<textElement>
+					<font fontName="SansSerif" size="24"/>
+				</textElement>
+				<text><![CDATA[Receita Médica]]></text>
+			</staticText>
+			<textField pattern="EEEEE dd MMMMM yyyy">
+				<reportElement x="376" y="11" width="169" height="20" uuid="c5a6b5ae-17f6-42d2-8456-429540273276"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="11" y="77" width="100" height="20" uuid="c0c70737-ace9-4cca-aeb5-7deb693c1934"/>
+				<text><![CDATA[Nª]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="24" y="77" width="100" height="20" uuid="b2661493-0d8c-4af6-8804-091a5ed4953c"/>
+				<textFieldExpression><![CDATA[$F{ID}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="187">
+			<staticText>
+				<reportElement x="25" y="20" width="64" height="20" uuid="3e39d5da-253d-481f-ab4c-82c2a48db0f6"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Data criação:]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="93" y="20" width="64" height="20" uuid="281a150a-277f-45dc-9ba9-8e11994c90eb"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{DTCRIACAO}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="188" y="20" width="100" height="20" uuid="8ae86f10-949c-4165-b75d-3e48f9a55094"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Data encerramento]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="288" y="20" width="64" height="20" uuid="d91def5d-5574-45cd-ba1f-065508e44839"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{DTENCERRAMENTO}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="370" y="21" width="100" height="20" uuid="db6fb056-cb52-4b1d-b8a4-ac9a4c2b8030"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Data validade]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="470" y="21" width="64" height="20" uuid="7a32d9e7-b039-4b7c-828a-9a8be3c2a9f5"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{DTVALIDADE}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="21" y="54" width="37" height="20" uuid="5a380efb-9040-4a92-9e1e-9c8d791157c2"/>
+				<text><![CDATA[Nome:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="21" y="74" width="37" height="20" uuid="507f5031-24c7-4cf7-b9a5-8859f2a70ab7"/>
+				<text><![CDATA[CPF]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="61" y="74" width="227" height="20" uuid="19b7feb8-fc71-4b39-bdab-6a03d136764c"/>
+				<textFieldExpression><![CDATA[$F{cpf}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="61" y="54" width="227" height="20" uuid="0d1f94d1-5c7c-4f23-b757-fdeac7331d70"/>
+				<textFieldExpression><![CDATA[$F{pessoa}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="21" y="97" width="76" height="20" uuid="5ff426c5-be55-4b1d-9ad2-15755cffeb8f"/>
+				<text><![CDATA[Medicamento]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="97" y="97" width="191" height="20" uuid="6e6283b2-55ac-4af7-874d-f1115b9dee8b"/>
+				<textFieldExpression><![CDATA[$F{PRODUTO}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="21" y="117" width="66" height="20" uuid="89860b77-3b6a-4ffd-92e9-11e4ac564283"/>
+				<text><![CDATA[Quantidade:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="85" y="117" width="26" height="20" uuid="b583e5d9-9c7b-48b2-b6d4-90731870e319"/>
+				<textFieldExpression><![CDATA[$F{QUANT}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="111" y="117" width="100" height="20" uuid="3633fc77-bc16-4edb-879f-a0d7ab31719a"/>
+				<textFieldExpression><![CDATA[$F{unidademedida}]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement mode="Transparent" x="21" y="20" width="148" height="20" uuid="2afc1454-6246-4bc4-a11d-3aae71d44eb7"/>
+			</rectangle>
+			<rectangle>
+				<reportElement mode="Transparent" x="169" y="20" width="183" height="20" uuid="9688908a-abe6-4b42-8e1a-8e94a6647980"/>
+			</rectangle>
+			<rectangle>
+				<reportElement mode="Transparent" x="352" y="20" width="182" height="20" uuid="d1432c6d-9204-43e0-9150-081d865fbbcf"/>
+			</rectangle>
+			<textField>
+				<reportElement x="58" y="0" width="100" height="17" uuid="c48052e8-0422-4657-83c9-9712e771a83a"/>
+				<textFieldExpression><![CDATA[$F{STATUS}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="21" y="1" width="100" height="20" uuid="c917be9a-a164-4b6f-9220-d8a74f434306"/>
+				<text><![CDATA[Status:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="78" y="137" width="328" height="48" uuid="2b4745e7-9ef6-46b8-93de-212edaa8dd97"/>
+				<textFieldExpression><![CDATA[$F{DESCRICAO}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="20" y="137" width="100" height="20" uuid="259e40c5-46c5-45a3-ba34-e298a011d9c5"/>
+				<text><![CDATA[Descrição]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+</jasperReport>

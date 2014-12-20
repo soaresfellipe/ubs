@@ -1,0 +1,380 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:head>
+	<title>Cadastro de Pessoas - UBS+ Web</title>
+	<script language="JavaScript">
+		function habilitaCampos(tipo) {
+			if (tipo == 1) {
+				div0 = document.getElementById('pessoa');
+				div1 = document.getElementById('paciente');
+				div2 = document.getElementById('enfermeiro');
+				div3 = document.getElementById('medico');
+				div4 = document.getElementById('cbo');
+				div5 = document.getElementById('crf');
+				div6 = document.getElementById('ufConselho');
+				div7 = document.getElementById('ubs_func');
+				div0.style.display = 'block';
+				div1.style.display = 'block';
+				div2.style.display = 'none';
+				div3.style.display = 'none';
+				div4.style.display = 'none';
+				div5.style.display = 'none';
+				div6.style.display = 'none';
+				div7.style.display = 'none';
+			} else {
+				if ((tipo == 2) || (tipo == 6)) {
+					div0 = document.getElementById('pessoa');
+					div1 = document.getElementById('paciente');
+					div2 = document.getElementById('enfermeiro');
+					div3 = document.getElementById('medico');
+					div4 = document.getElementById('cbo');
+					div5 = document.getElementById('crf');
+					div6 = document.getElementById('ufConselho');
+					div7 = document.getElementById('ubs_func');
+					div0.style.display = 'block';
+					div1.style.display = 'none';
+					div2.style.display = 'none';
+					div3.style.display = 'none';
+					div4.style.display = 'block';
+					div5.style.display = 'block';
+					div6.style.display = 'block';
+					div7.style.display = 'block';
+				} else {
+					if ((tipo == 3) || (tipo == 5)) {
+						div0 = document.getElementById('pessoa');
+						div1 = document.getElementById('paciente');
+						div2 = document.getElementById('enfermeiro');
+						div3 = document.getElementById('medico');
+						div4 = document.getElementById('cbo');
+						div5 = document.getElementById('crf');
+						div6 = document.getElementById('ufConselho');
+						div7 = document.getElementById('ubs_func');
+						div0.style.display = 'block';
+						div1.style.display = 'none';
+						div2.style.display = 'none';
+						div3.style.display = 'none';
+						div4.style.display = 'block';
+						div5.style.display = 'none';
+						div6.style.display = 'none';
+						div7.style.display = 'block';
+					} else {
+						if (tipo == 4) {
+							div0 = document.getElementById('pessoa');
+							div1 = document.getElementById('paciente');
+							div2 = document.getElementById('enfermeiro');
+							div3 = document.getElementById('medico');
+							div4 = document.getElementById('cbo');
+							div5 = document.getElementById('crf');
+							div6 = document.getElementById('ufConselho');
+							div7 = document.getElementById('ubs_func');
+							div0.style.display = 'block';
+							div1.style.display = 'none';
+							div2.style.display = 'block';
+							div3.style.display = 'none';
+							div4.style.display = 'block';
+							div5.style.display = 'none';
+							div6.style.display = 'block';
+							div7.style.display = 'block';
+						} else {
+							if (tipo = 7) {
+								div0 = document.getElementById('pessoa');
+								div1 = document.getElementById('paciente');
+								div2 = document.getElementById('enfermeiro');
+								div3 = document.getElementById('medico');
+								div4 = document.getElementById('cbo');
+								div5 = document.getElementById('crf');
+								div6 = document.getElementById('ufConselho');
+								div7 = document
+										.getElementById('especialidades');
+								div8 = document.getElementById('ubs_func');
+								div0.style.display = 'block';
+								div1.style.display = 'none';
+								div2.style.display = 'none';
+								div3.style.display = 'block';
+								div4.style.display = 'block';
+								div5.style.display = 'none';
+								div6.style.display = 'block';
+								div7.style.display = 'block';
+								div8.style.display = 'block';
+							}
+						}
+					}
+				}
+			}
+		}
+	</script>
+</h:head>
+
+<h:body>
+	<h:outputStylesheet library="css" name="ubs.css" />
+	<ui:include src="/WEB-INF/cabecalho.xhtml" />
+	<!-- 	<h3 id="titulopagina">Cadastro de Pessoas</h3> -->
+	<p:panel>
+		<h:form id="dadosPessoa">
+
+			<p:growl id="message" showDetail="true" life="3000" sticky="false" />
+
+			<p:panel>
+		Escolha o tipo de Pessoa que irá cadastrar: 
+		<br />
+				<br />
+
+
+
+				<input type="radio" name='tpessoa' checked="checked" value="1"
+					onclick="habilitaCampos('1');" />Paciente
+				<input type="radio" name='tpessoa' value="2"
+					onclick="habilitaCampos('2');" />Analista Clinico
+				<input type="radio" name='tpessoa' value="3"
+					onclick="habilitaCampos('3');" />Atendente
+				<input type="radio" name='tpessoa' value="4"
+					onclick="habilitaCampos('4');" />Enfermeiro
+				<input type="radio" name='tpessoa' value="5"
+					onclick="habilitaCampos('5');" />Estoquista
+				<input type="radio" name='tpessoa' value="6"
+					onclick="habilitaCampos('6');" />Farmaceutico
+				<input type="radio" name='tpessoa' value="7"
+					onclick="habilitaCampos('7');" />Medico
+		<br />
+			</p:panel>
+			<br />
+			<!-- Dados Pessoa -->
+
+			<div id="pessoa" style="display: block">
+				<p:panel header="Dados Pessoais">
+					<!--  Campo Nome -->
+					<p:focus />
+					<h:outputLabel for="nome" value="Nome: " />
+					<p:inputText id="nome" maxlenght="50" size="50" required="true"
+						requiredMessage="Campo obrigatório não preenchido"
+						value="#{pessoaBean.pessoa.nome}" />
+					<p:spacer height="25" />
+					<br />
+
+					<!--  Campo CPF  -->
+					<p:focus />
+					<h:outputLabel for="cpf" value="CPF: " />
+					<p:inputMask id="cpf" size="20" maxlenght="11"
+						mask="999.999.999-99" required="FALSE"
+						requiredMessage="Campo obrigatório não preenchido"
+						value="#{pessoaBean.pessoa.cpf}" />
+					<p:spacer width="25" />
+
+					<!-- Campo Ind Dependente  -->
+					<h:outputText value="Dependente: " />
+					<p:selectBooleanCheckbox
+						value="#{pessoaBean.pessoa.ind_dependente}" />
+					<p:spacer width="25" />
+
+					<!--  Campo RG  -->
+					<p:focus />
+					<h:outputLabel for="rg" value="RG: " />
+					<p:inputText id="rg" size="20" value="#{pessoaBean.pessoa.rg}" />
+					<p:spacer width="25" />
+
+					<!--  Campo Data de Nascimento  -->
+					<p:focus />
+					<h:outputLabel for="dataNascimento" value="Data de Nascimento: " />
+					<p:calendar id="dataNascimento" locale="pt_BR"
+						showButtonPanel="true" navigator="true" pattern="dd/MM/yyyy"
+						yearRange="1900:2300" value="#{pessoaBean.pessoa.dtNascimento}" />
+					<p:spacer height="25" />
+					<br />
+				</p:panel>
+				<br />
+				<p:panel header="Endereço e Contatos">
+					<!--  Campo Logradouro  -->
+					<p:focus />
+					<h:outputLabel for="logradouro" value="Logradouro: " />
+					<p:inputText maxlenght="80" size="80" id="logradouro"
+						value="#{pessoaBean.pessoa.logradouro}" />
+					<p:spacer height="25" />
+					<br />
+
+					<!--  Campo UF  -->
+					<p:focus />
+					<h:outputLabel for="uf" value="UF: " />
+					<p:inputText maxlenght="2" size="2" id="uf" required="FALSE"
+						requiredMessage="Campo obrigatório não preenchido"
+						value="#{pessoaBean.pessoa.uf}" />
+					<p:spacer height="25" />
+
+					<!--  Campo Cidade  -->
+					<p:focus />
+					<h:outputLabel for="cidade" value="Cidade:  " />
+					<p:inputText maxlenght="40" size="40" id="cidade" required="FALSE"
+						requiredMessage="Campo obrigatório não preenchido"
+						value="#{pessoaBean.pessoa.cidade}" />
+					<p:spacer width="25" />
+
+					<!--  Campo Bairro  -->
+					<p:focus />
+					<h:outputLabel for="bairro" value="Bairro:  " />
+					<p:inputText maxlenght="40" size="40" id="bairro" required="FALSE"
+						requiredMessage="Campo obrigatório não preenchido"
+						value="#{pessoaBean.pessoa.bairro}" />
+					<p:spacer width="25" />
+					<br />
+
+					<!--  Campo CEP  -->
+					<p:focus />
+					<h:outputLabel for="cep" value="CEP:  " />
+					<p:inputMask maxlenght="8" size="12" mask="99.999-999" id="cep"
+						value="#{pessoaBean.pessoa.cep}" />
+					<p:spacer height="25" />
+
+					<!--  Campo Telefone Residencial  -->
+					<p:focus />
+					<h:outputLabel for="foneResidencial" value="Telefone Residencial: " />
+					<p:inputMask maxlenght="10" size="16" mask="(99) 9999-9999"
+						id="foneResidencial" value="#{pessoaBean.pessoa.telefone}" />
+					<p:spacer width="25" />
+
+					<!--  Campo Telefone Celular  -->
+					<p:focus />
+					<h:outputLabel for="foneCelular" value="Telefone Celular:  " />
+					<p:inputMask maxlenght="11" size="18" mask="(99) 99999-9999"
+						id="foneCelular" value="#{pessoaBean.pessoa.celular}" />
+					<p:spacer height="25" />
+				</p:panel>
+
+				<br />
+
+				<p:panel header="Dados de Usuário">
+					<!--  Campo Senha do Usuário  -->
+					<p:focus />
+					<h:outputLabel for="senha" value="Senha:  " />
+					<p:password id="senha" required="FALSE"
+						requiredMessage="Campo obrigatório não preenchido"
+						value="#{pessoaBean.senha}" />
+					<p:spacer height="25" />
+				</p:panel>
+			</div>
+
+			<br />
+
+			<!-- Dados Paciente -->
+
+			<div id="paciente" style="display: block">
+				<p:panel header="Dados de Paciente">
+					<h:panelGrid id="pgPaciente" columns="3" cellpadding="4">
+						<h:outputLabel for="codsus" value="Código SUS: " />
+						<p:inputText id="codsus" value="#{pessoaBean.paciente.cns}" />
+						<!--  <h:outputLabel for="indpne"	value="Portador de Necessidades Especiais: " />  -->
+						<!--  <p:selectBooleanCheckbox id="indpne" /> -->
+						<h:outputLabel for="faltas" value="Quant. de Faltas: " />
+						<p:inputText readonly="TRUE" id="faltas"
+							value="#{pessoaBean.paciente.quantFalta}" />
+						<br />
+						<h:outputLabel for="observacoes" value="Observações: " />
+					</h:panelGrid>
+					<p:inputTextarea style="width:350px; height:100px;"
+						id="observacoes" value="#{pessoaBean.paciente.observacoes}" />
+				</p:panel>
+			</div>
+
+			<!-- Campo Código CBO -->
+
+			<div id="cbo" style="display: none">
+				<p:panel header="Código Brasileiro de Ocupações">
+					<h:panelGrid id="pgcbo" columns="2" cellpadding="4">
+						<h:outputLabel for="codcboAC" value="Código CBO: " />
+						<p:inputText id="codcboAC" value="#{pessoaBean.func.codCBO}" />
+					</h:panelGrid>
+				</p:panel>
+			</div>
+
+			<!-- Campo CRF -->
+
+			<div id="crf" style="display: none">
+				<p:panel header="Conselho Regional de Farmacêuticos">
+					<h:panelGrid id="pgcrf" columns="2" cellpadding="4">
+						<h:outputLabel for="crf1" value="CRF: " />
+						<p:inputText id="crf1" value="#{pessoaBean.func.crf}" />
+					</h:panelGrid>
+				</p:panel>
+			</div>
+
+
+			<!-- Dados Enfermeiro -->
+
+			<div id="enfermeiro" style="display: none">
+				<p:panel header="Conselho Regional de Enfermagem">
+					<h:panelGrid id="pgEnf" columns="2" cellpadding="4">
+						<h:outputLabel for="coren" value="COREN " />
+						<p:inputText id="coren" value="#{pessoaBean.func.coren}" />
+					</h:panelGrid>
+				</p:panel>
+			</div>
+
+			<!-- 	Dados Medico -->
+
+			<div id="medico" style="display: none">
+				<p:panel header="Conselho Regional de Medicina">
+					<h:panelGrid id="pgMed" columns="2" cellpadding="4">
+						<h:outputLabel for="crmMED" value="CRM " />
+						<p:inputText id="crmMED" value="#{pessoaBean.func.crm}" />
+					</h:panelGrid>
+				</p:panel>
+			</div>
+
+			<!-- Campo UF Conselho -->
+
+			<div id="ufConselho" style="display: none">
+				<p:panel header="Unidade Federativa do Conselho">
+					<h:panelGrid id="pgufconselho" columns="2" cellpadding="4">
+						<h:outputLabel for="ufConselho1" value="UF-Conselho" />
+						<p:inputText id="ufConselho1"
+							value="#{pessoaBean.func.ufConselho}" />
+					</h:panelGrid>
+				</p:panel>
+			</div>
+
+			<br />
+
+			<div id="especialidades" style="display: none">
+				<p:panel header="Especialidades Médicas">
+					<h:outputLabel for="pickEsp" value="Especialidades:" />
+					<p:pickList id="pickEsp" value="#{pessoaBean.especialidades}"
+						var="esp" iconOnly="true" effect="fade" itemLabel="#{esp.nome}"
+						converter="especialidadeConverter" itemValue="#{esp}">
+						<f:facet name="sourceCaption">Disponivel</f:facet>
+						<f:facet name="targetCaption">Selecionadas</f:facet>
+					</p:pickList>
+				</p:panel>
+			</div>
+
+			<div id="ubs_func" style="display: none">
+				<p:panel header="Alocação do Funcionário">
+					<h:outputLabel for="pickUBSFunc"
+						value="Alocar funcionário na(s) UBS(s):" />
+					<p:pickList id="pickUBSFunc" value="#{pessoaBean.dualListUBS}"
+						var="ubs" iconOnly="true" effect="fade"
+						itemLabel="#{ubs.localidade} - #{ubs.nome}"
+						converter="funcUBSConverter" itemValue="#{ubs}">
+						<f:facet name="sourceCaption">Disponivel</f:facet>
+						<f:facet name="targetCaption">Selecionadas</f:facet>
+					</p:pickList>
+				</p:panel>
+			</div>
+
+			<br />
+			<br />
+
+			<!--   Botão de Salvar  -->
+			<p:commandButton value="Gravar Dados"
+				action="#{pessoaBean.cadastrar}" update="dadosPessoa,message">
+				<p:resetInput target="dadosPessoa"></p:resetInput>
+			</p:commandButton>
+			
+		</h:form>
+	</p:panel>
+	<ui:include src="/WEB-INF/rodape.xhtml" />
+</h:body>
+</html>

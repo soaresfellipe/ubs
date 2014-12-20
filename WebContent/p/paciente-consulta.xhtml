@@ -1,0 +1,137 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+<h:head>
+	<title>Consulta de Paciente - UBS+ Web</title>
+</h:head>
+<h:body>
+	<h:outputStylesheet library="css" name="ubs.css" />
+	<ui:include src="/WEB-INF/cabecalho.xhtml" />
+
+	<p:panel header="Agendamento de Consultas">
+		<h:form id="frmAgendaOnline">
+
+			<p:growl id="message" showDetail="true" life="3000" sticky="false" />
+			
+		Filtros de Pesquisa:
+		<p:panelGrid columns="9" id="pnl">
+
+				<h:outputLabel for="ubs" value="UBS: " />
+				<p:selectOneMenu id="ubs" value="#{agendaOnlineBean.ubs.id}">
+					<f:selectItem itemLabel="Selecionar a UBS" itemValue=""
+						noSelectionOption="false" />
+					<f:selectItems value="#{agendaOnlineBean.listaUBS}" var="ubs"
+						itemValue="#{ubs.id}" itemLabel="#{ubs.nome}" />
+					<p:ajax event="change"
+						listener="#{agendaOnlineBean.visualizarAgenda}" update="espec" />
+				</p:selectOneMenu>
+
+				<h:outputLabel for="espec" value="Especialidade: " />
+				<p:selectOneMenu id="espec" value="#{agendaOnlineBean.esp.id}">
+					<f:selectItem itemLabel="Selecionar a Especialidade" itemValue=""
+						noSelectionOption="false" />
+					<f:selectItems value="#{agendaOnlineBean.listaEsp}" var="esp"
+						itemValue="#{esp.id}" itemLabel="#{esp.nome}" />
+					<p:ajax event="change"
+						listener="#{agendaOnlineBean.visualizarAgenda}" update="medico" />
+				</p:selectOneMenu>
+
+				<h:outputLabel for="medico" value="Médico: " />
+				<p:selectOneMenu id="medico" value="#{agendaOnlineBean.medico.id}">
+					<f:selectItem itemLabel="Selecionar Médico" itemValue=""
+						noSelectionOption="false" />
+					<f:selectItems value="#{agendaOnlineBean.listaMed}" var="med"
+						itemValue="#{med.id}" itemLabel="#{med.pessoa.nome}" />
+					<p:ajax event="change"
+						listener="#{agendaOnlineBean.visualizarAgenda}" update="medico" />
+				</p:selectOneMenu>
+
+				<h:outputLabel for="data" value="Data: " />
+				<p:calendar id="data" pattern="dd-MM-yyyy" mask="true"
+					value="#{agendaOnlineBean.data}" />
+
+				<p:commandButton value="Atualizar" ajax="FALSE"
+					action="#{agendaOnlineBean.horariosLivresPaciente}"
+					update="dtAgenda" />
+			</p:panelGrid>
+			<p:separator />
+
+			<p:dataTable var="agenda" id="dtAgenda"
+				value="#{agendaOnlineBean.listaHorariosLivresPaciente}"
+				selection="#{agendaOnlineBean.agenda}" selectionMode="single"
+				rowKey="#{agenda.id}">
+				<p:column headerText="Data" style="width:70px;text-align: center">
+					<h:outputText value="#{agenda.data}">
+						<f:convertDateTime pattern="dd/MM/yyyy" />
+					</h:outputText>
+				</p:column>
+				<p:column headerText="Hora Início"
+					style="width:70px;text-align: center">
+					<h:outputText value="#{agenda.horaInicio}">
+						<f:convertDateTime type="time" timeZone="GMT-03:00"
+							dateStyle="long" pattern="HH:mm" />
+					</h:outputText>
+				</p:column>
+				<p:column headerText="Hora Fim"
+					style="width:60px;text-align: center">
+					<h:outputText value="#{agenda.horaFim}">
+						<f:convertDateTime type="time" timeZone="GMT-03:00"
+							dateStyle="long" pattern="HH:mm" />
+					</h:outputText>
+				</p:column>
+				<p:column headerText="Médico">
+					<h:outputText value="#{agenda.medico.pessoa.nome}" />
+				</p:column>
+				<p:column headerText="Especialidade"
+					style="width:80px;text-align: center">
+					<h:outputText value="#{agenda.especialidade.nome}" />
+				</p:column>
+				<p:column headerText="Paciente">
+					<h:outputText value="#{agenda.paciente.pessoa.nome}" />
+				</p:column>
+				<p:column headerText="Ação" style="width:180px;text-align: center">
+					<p:commandButton value="Marcar"
+						disabled="#{(agenda.status == 'Agendada')}" update="dtAgenda"
+						action="#{agendaOnlineBean.agendaConsultaOnline}">
+						<f:setPropertyActionListener value="#{agenda}"
+							target="#{agendaOnlineBean.agenda}" />
+						<p:confirm header="Confirmação"
+							message="Confirmar agendamento de consulta?" icon="ui-icon-alert" />
+					</p:commandButton>
+
+					<p:spacer height="10" />
+					<p:commandButton value="Desmarcar"
+						disabled="#{!(agenda.status == 'Agendada')}"
+						update="dtAgenda,:frmAgendaOnline:message"
+						action="#{agendaOnlineBean.desmarcaConsultaOnline}">
+						<f:setPropertyActionListener value="#{agenda}"
+							target="#{agendaOnlineBean.agenda}" />
+						<p:confirm header="Confirmação"
+							message="Confirmar agendamento de consulta?" icon="ui-icon-alert" />
+					</p:commandButton>
+				</p:column>
+			</p:dataTable>
+		</h:form>
+
+		<ui:include src="/WEB-INF/rodape.xhtml" />
+
+	</p:panel>
+
+	<!-- Dialog de Confirmação do Agendamento do Paciente na Consulta -->
+	<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+		<h:form id="frmConfirmDialog">
+			<p:commandButton value="Sim" type="button"
+				styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+			<p:commandButton value="Não" type="button"
+				styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+		</h:form>
+	</p:confirmDialog>
+
+</h:body>
+</html>

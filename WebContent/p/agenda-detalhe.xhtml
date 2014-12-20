@@ -1,0 +1,77 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:head>
+	<title>Detalhamento de Agenda - UBS+ Web</title>
+</h:head>
+<h:body>
+	<h:outputStylesheet library="css" name="ubs.css" />
+	<ui:include src="/WEB-INF/cabecalho.xhtml" />
+
+	<h3 id="titulopagina">Detalhe da Agenda</h3>
+
+	<h:form id="agendaDetalhe">
+
+		<!-- Campo da Data da Consulta -->
+		<p:outputLabel for="dataConsulta" value="Data: " />
+		<p:calendar value="#{agendaBeanRequest.agenda.data}" id="dataConsulta"
+			pattern="dd/MM/yyyy" mask="true" maxlength="8" size="8" />
+		<p:spacer width="25" />
+
+		<!-- Campo da Hora Início -->
+		<p:outputLabel for="horaInicio" value="Hora Início: " />
+		<p:calendar value="#{agendaBeanRequest.agenda.horaInicio}"
+			id="horaInicio" mask="99:99" timeOnly="TRUE" pattern="HH:mm"
+			maxlength="4" size="4" />
+		<p:spacer width="25" />
+
+		<!-- Campo da Hora Fim -->
+		<p:outputLabel for="horaFim" value="Hora Fim: " />
+		<p:calendar value="#{agendaBeanRequest.agenda.horaFim}" id="horaFim"
+			pattern="HH:mm" maxlength="4" size="4" />
+		<p:spacer width="25" />
+
+		<!-- Campo do Status -->
+		<p:outputLabel for="status" value="Status: " />
+		<p:inputText value="#{agendaBeanRequest.agenda.status}" id="status"
+			size="20" readonly="TRUE" />
+
+		<br />
+
+		<!-- Campo do Médico -->
+		<p:outputLabel for="nomeMedico" value="Médico: " />
+		<p:inputText value="#{agendaBeanRequest.agenda.medico.pessoa.nome}"
+			readonly="TRUE" id="nomeMedico" maxlenght="50" size="50" />
+		<p:spacer width="25" />
+
+		<!-- Campo de Especialidade da Consulta -->
+		<p:outputLabel for="nomeEspec" value="Especialidade: " />
+		<p:inputText value="#{agendaBeanRequest.agenda.especialidade.nome}"
+			readonly="TRUE" id="nomeEspec" maxlenght="25" size="25" />
+
+		<br />
+
+		<!-- Campo do Paciente -->
+		<p:outputLabel for="nomePaciente" value="Paciente: " />
+		<p:inputText id="nomePaciente" readonly="TRUE"
+			value="#{agendaBeanRequest.agenda.paciente.pessoa.nome}"
+			maxlenght="50" size="50" />
+
+		<p:selectBooleanCheckbox id="tagOnline" value="FALSE"
+			itemLabel="Marcação Online" disabled="TRUE" />
+		<p:spacer width="25" />
+
+		<br />
+		<br />
+
+		<!-- Botões da Tela -->
+
+	</h:form>
+	<ui:include src="/WEB-INF/rodape.xhtml" />
+</h:body>
+</html>

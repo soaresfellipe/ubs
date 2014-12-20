@@ -1,0 +1,150 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"  
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:head>
+
+	<title>Vacinas - UBS+ Web</title>
+</h:head>
+<h:body>
+	<h:outputStylesheet library="css" name="ubs.css" />
+	<ui:include src="/WEB-INF/cabecalho.xhtml" />
+
+	<h3 id="titulopagina">Cadastro Vacina</h3>
+
+	<h:form id="frmPrincipal">
+
+		<p:growl id="message" showDetail="true" life="3000" sticky="false" />
+
+		<p:dataTable id="idResultadoBusca" style="width:700px"
+			paginator="true" rows="10" value="#{vacinaBean.listVacinas}"
+			var="vacina" editable="true">
+
+			<p:ajax event="rowEdit" listener="#{vacinaBean.onRowEdit}"
+				update="idResultadoBusca,:frmPrincipal:message" />
+			<p:ajax event="rowEditCancel" listener="#{vacinaBean.onRowCancel}"
+				update="idResultadoBusca,:frmPrincipal:message" />
+
+
+			<p:column headerText="Nome">
+				<p:cellEditor>
+					<f:facet name="output">
+						<h:outputText value="#{vacina.nome}" />
+					</f:facet>
+					<f:facet name="input">
+						<h:inputText id="nome" value="#{vacina.nome}" />
+					</f:facet>
+				</p:cellEditor>
+			</p:column>
+			<p:column headerText="Descrição">
+				<p:cellEditor>
+					<f:facet name="output">
+						<h:outputText value="#{vacina.descricao}" />
+					</f:facet>
+					<f:facet name="input">
+						<h:inputText id="desc" value="#{vacina.descricao}" />
+					</f:facet>
+				</p:cellEditor>
+			</p:column>
+			<p:column headerText="Idade Primeira Dose">
+				<p:cellEditor>
+					<f:facet name="output">
+						<h:outputText value="#{vacina.idadePrimeiraDose}" />
+					</f:facet>
+					<f:facet name="input">
+						<h:inputText id="ipd" value="#{vacina.idadePrimeiraDose}" />
+					</f:facet>
+				</p:cellEditor>
+			</p:column>
+			<p:column headerText="Intervalo Doses">
+				<p:cellEditor>
+					<f:facet name="output">
+						<h:outputText value="#{vacina.intervaloDose}" />
+					</f:facet>
+					<f:facet name="input">
+						<h:inputText id="intdose" value="#{vacina.intervaloDose}" />
+					</f:facet>
+				</p:cellEditor>
+			</p:column>
+			<p:column headerText="Quantidade Doses">
+				<p:cellEditor>
+					<f:facet name="output">
+						<h:outputText value="#{vacina.quantDose}" />
+					</f:facet>
+					<f:facet name="input">
+						<h:inputText id="qdose" value="#{vacina.quantDose}" />
+					</f:facet>
+				</p:cellEditor>
+			</p:column>
+			<p:column headerText="Obrigatório?">
+				<p:cellEditor>
+					<f:facet name="output">
+						<h:outputText value="#{vacina.obrigatorio}" />
+					</f:facet>
+					<f:facet name="input">
+						<h:inputText id="obrig" value="#{vacina.obrigatorio}" />
+					</f:facet>
+				</p:cellEditor>
+			</p:column>
+
+
+			<p:column style="width:32px">
+				<p:rowEditor />
+			</p:column>
+
+
+			<f:facet name="footer">
+				<p:commandButton id="btChamaDlgCadastro" value="Novo Item"
+					onclick="PF('dlgCadastro').show();" />
+			</f:facet>
+
+		</p:dataTable>
+
+	</h:form>
+
+	<p:dialog header="Cadastro" widgetVar="dlgCadastro" modal="true">
+		<h:form id="frmCadastro">
+			<p:panelGrid columns="2">
+				<p:outputLabel id="lbNome" value="Nome:" />
+				<p:inputText id="txtNome" value="#{vacinaBean.vacina.nome}" />
+
+				<p:outputLabel id="lbIntDose" value="Intervalo Dose: " />
+				<p:inputText id="intDose" value="#{vacinaBean.vacina.intervaloDose}" />
+
+				<p:outputLabel id="lbQuantDose" value="Quantidade de Dose: " />
+				<p:inputText id="quantDose" value="#{vacinaBean.vacina.quantDose}" />
+
+				<p:outputLabel id="lbDesc" value="Descrição" />
+				<p:inputText id="Desc" value="#{vacinaBean.vacina.descricao}" />
+
+				<p:outputLabel value="Obrigatório?" for="obrig" />
+				<p:selectBooleanButton id="obrig"
+					value="#{vacinaBean.vacina.obrigatorio}" onLabel="Sim"
+					offLabel="Não" />
+
+				<p:outputLabel id="lbFstIdade" value="Idade Primeira Dose: " />
+				<p:inputText id="fstIdade"
+					value="#{vacinaBean.vacina.idadePrimeiraDose}" />
+
+
+				<f:facet name="footer">
+					<center>
+						<p:commandButton id="btSalvar" value="Salvar"
+							update=":frmPrincipa:message"
+							action="vacina-cadastro.xhtml?faces-redirect=true" ajax="false"
+							actionListener="#{vacinaBean.salvar}"
+							onclick="dlgCadastro.close()">
+						</p:commandButton>
+					</center>
+				</f:facet>
+			</p:panelGrid>
+		</h:form>
+	</p:dialog>
+
+	<ui:include src="/WEB-INF/rodape.xhtml" />
+</h:body>
+</html>

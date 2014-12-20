@@ -1,0 +1,197 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<title>Farmacia Retirar sem Receita - UBS+ Web</title>
+</h:head>
+
+<h:body>
+	<h:outputStylesheet library="css" name="ubs.css" />
+	<ui:include src="/WEB-INF/cabecalho.xhtml" />
+	<h:form id="principal">
+		<div style="height: 30px"></div>
+
+		<p:growl id="message" showDetail="true" life="3000" sticky="false" />
+
+		<p:panel header="Dados da receita">
+			<h:form id="frmProduto">
+				<p:panelGrid columns="2">
+
+					<p:outputLabel value="Paciente" style="color:gray;font-weight:bold" />
+					<p:columnGroup>
+						<p:inputText value="#{farmaciaBean.paciente.pessoa.nome}"
+							disabled="true" />
+						<p:commandButton oncomplete="PF('dlgPesquisarPaciente').show()"
+							icon="ui-icon-search" title="View"
+							onclick="PF('dlgPesquisarPaciente').show();">
+						</p:commandButton>
+					</p:columnGroup>
+
+					<p:outputLabel value="Medicamento"
+						style="color:gray;font-weight:bold" />
+					<p:columnGroup>
+						<p:inputText value="#{farmaciaBean.medicamento.nome}"
+							disabled="true" />
+						<p:commandButton oncomplete="PF('dlgPesquisarMedicamento').show()"
+							icon="ui-icon-search" title="View"
+							onclick="PF('dlgPesquisarMedicamento').show();">
+						</p:commandButton>
+					</p:columnGroup>
+
+					<p:outputLabel value="Quantidade disponível"
+						style="color:gray;font-weight:bold" />
+					<p:columnGroup>
+						<p:inputText value="#{farmaciaBean.medicamento.quantAtual}"
+							disabled="true" />
+					</p:columnGroup>
+
+					<p:outputLabel value="Médico" />
+					<p:columnGroup>
+						<p:inputText value="#{farmaciaBean.medico}" />
+					</p:columnGroup>
+
+					<p:outputLabel value="CRM" />
+					<p:columnGroup>
+						<p:inputText value="#{farmaciaBean.crm}" />
+					</p:columnGroup>
+
+					<p:outputLabel value="Quantidade Solicitada"
+						style="color:gray;font-weight:bold" />
+					<p:columnGroup>
+						<p:inputText value="#{farmaciaBean.quant}" />
+					</p:columnGroup>
+
+					<p:outputLabel value="Local" style="color:gray;font-weight:bold" />
+					<p:columnGroup>
+						<p:inputText value="#{farmaciaBean.local}" />
+					</p:columnGroup>
+
+					<p:outputLabel value="Data Solicitação"
+						style="color:gray;font-weight:bold" />
+					<p:columnGroup>
+						<p:calendar value="#{farmaciaBean.dtSolicitacao}"
+							id="dataSolicitacao" pattern="dd/MM/yyyy" mask="true"
+							maxlength="8" size="8" />
+					</p:columnGroup>
+
+				</p:panelGrid>
+
+				<p:toolbar style="width:280px;">
+					<f:facet name="left">
+						<p:commandButton value="Cadastrar" id="btCadastrarAlt"
+							action="#{farmaciaBean.salvarRetiradaReceitaExterna}"
+							icon="ui-icon-disk" update="frmProduto, :principal:message">
+						</p:commandButton>
+					</f:facet>
+					<f:facet name="right">
+						<p:commandButton value="Cancelar" id="btCancelar"
+							action="farmacia.xhtml?faces-redirect=true" ajax="false"
+							actionListener="farmaciaBean.limpaCampos" icon="ui-icon-close">
+						</p:commandButton>
+					</f:facet>
+				</p:toolbar>
+			</h:form>
+		</p:panel>
+
+	</h:form>
+
+	<p:dialog header="Pesquisar Paciente" widgetVar="dlgPesquisarPaciente"
+		modal="true">
+		<h:form>
+			<p:panel id="pnl2">
+				<!--  Campo Nome busca -->
+
+				<p:focus />
+				<h:outputLabel for="idnome" value="Pesquisar por Nome: "
+					style="font-size: 20px; text-decoration: bold;" />
+
+				<p:inputText maxlenght="50" size="50" id="idnome" required="FALSE"
+					value="#{farmaciaBean.nome}">
+					<p:ajax event="keyup" listener="#{farmaciaBean.buscaPaciente}"
+						update="resultadoBusca" />
+				</p:inputText>
+
+				<p:spacer height="25" />
+
+				<br />
+				<!--  Tabela com resultado da busca por nome -->
+				<p:dataTable id="resultadoBusca"
+					value="#{farmaciaBean.listaPaciente}" var="paciente"
+					selection="#{farmaciaBean.paciente}" selectionMode="single"
+					rowKey="#{paciente.id}">
+
+					<p:column headerText="Nome">
+						<h:outputText value="#{paciente.pessoa.nome}" />
+					</p:column>
+					<p:column headerText="Código SUS">
+						<h:outputText value="#{paciente.cns}" />
+					</p:column>
+
+					<f:facet name="footer">
+						<p:commandButton value="Escolher" update=":principal"
+							onclick="PF('dlgPesquisarPaciente').close()"
+							action="#{farmaciaBean.buscaPaciente}">
+						</p:commandButton>
+					</f:facet>
+				</p:dataTable>
+
+			</p:panel>
+		</h:form>
+	</p:dialog>
+
+	<p:dialog header="Pesquisar Medicamento"
+		widgetVar="dlgPesquisarMedicamento" modal="true">
+
+		<h:form>
+			<p:panel id="pnlMedicamento">
+				<!--  Campo Nome busca -->
+
+				<p:focus />
+				<h:outputLabel for="idMed" value="Pesquisar por Nome: "
+					style="font-size: 20px; text-decoration: bold;" />
+
+				<p:inputText maxlenght="50" size="50" id="idMed" required="FALSE"
+					value="#{farmaciaBean.medicamentoNome}">
+					<p:ajax event="keyup" listener="#{farmaciaBean.buscaMedicamento}"
+						update="resultadoBuscaMed" />
+				</p:inputText>
+
+				<p:spacer height="25" />
+
+				<br />
+				<!--  Tabela com resultado da busca por nome -->
+				<p:dataTable id="resultadoBuscaMed"
+					value="#{farmaciaBean.listaMedicamento}" var="medicamento"
+					selection="#{farmaciaBean.medicamento}" selectionMode="single"
+					rowKey="#{medicamento.id}">
+
+					<p:column headerText="Nome">
+						<h:outputText value="#{medicamento.nome}" />
+					</p:column>
+					<p:column headerText="Quantidade Atual">
+						<h:outputText value="#{medicamento.quantAtual}" />
+					</p:column>
+
+					<f:facet name="footer">
+						<p:commandButton value="Escolher" update=":principal"
+							onclick="PF('dlgPesquisarMedicamento').close();">
+						</p:commandButton>
+					</f:facet>
+				</p:dataTable>
+
+			</p:panel>
+		</h:form>
+
+
+	</p:dialog>
+
+	<ui:include src="/WEB-INF/rodape.xhtml" />
+</h:body>
+</html>

@@ -1,0 +1,75 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:head>
+	<title>Relatórios - UBS+ Web</title>
+</h:head>
+<h:body>
+	<h:outputStylesheet library="css" name="ubs.css" />
+	<ui:include src="/WEB-INF/cabecalho.xhtml" />
+	<p:panel>
+		<h3 id="titulopagina">Relatórios</h3>
+
+		<h:form id="frmRelatorio">
+
+
+			<p:growl id="message" showDetail="true" life="3000" sticky="false" />
+
+			<p:panel id="pnl1"
+				header="Medicamentos retirados via Receita Interna">
+				<p:outputLabel value="Data início"></p:outputLabel>
+				<p:calendar id="dtInicio1" pattern="dd/MM/yyyy"
+					value="#{relatorioBean.dtInicio1}" />
+
+				<p:outputLabel value="Data fim"></p:outputLabel>
+				<p:calendar id="dtFim1" pattern="dd/MM/yyyy"
+					value="#{relatorioBean.dtFim1}" />
+
+				<p:commandButton value="Gerar relatório"
+					action="#{relatorioBean.medicamentosRInternaRetiradosPorPeriodo}"
+					ajax="false"></p:commandButton>
+			</p:panel>
+
+			<p:panel id="pnl2"
+				header="Medicamentos retirados via Receita Externa">
+				<p:outputLabel value="Data início"></p:outputLabel>
+				<p:calendar id="dtInicio2" pattern="dd/MM/yyyy"
+					value="#{relatorioBean.dtInicio2}" />
+
+				<p:outputLabel value="Data fim"></p:outputLabel>
+				<p:calendar id="dtFim2" pattern="dd/MM/yyyy"
+					value="#{relatorioBean.dtFim2}" />
+
+				<p:commandButton value="Gerar relatório"
+					action="#{relatorioBean.medicamentosRExternaRetiradosPorPeriodo}"
+					ajax="false"></p:commandButton>
+			</p:panel>
+
+			<p:panel id="pnl3" header="Consultas">
+				<p:outputLabel value="Data início"></p:outputLabel>
+				<p:calendar id="dtInicio3" pattern="dd/MM/yyyy"
+					value="#{relatorioBean.dtInicio3}" />
+
+				<p:outputLabel value="Data fim"></p:outputLabel>
+				<p:calendar id="dtFim3" pattern="dd/MM/yyyy"
+					value="#{relatorioBean.dtFim3}" />
+
+				<p:commandButton value="Gerar relatório"
+					action="#{relatorioBean.consultas}" ajax="false"></p:commandButton>
+			</p:panel>
+
+			<p:panel id="pnl4" header="Estoque das UBSs">
+				<p:commandButton value="Gerar relatório"
+					action="#{relatorioBean.estoque}" ajax="false"></p:commandButton>
+			</p:panel>
+
+		</h:form>
+		<ui:include src="/WEB-INF/rodape.xhtml" />
+	</p:panel>
+</h:body>
+</html>

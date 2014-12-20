@@ -1,0 +1,73 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"  
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:head>
+
+	<title>Especialidades - UBS+ Web</title>
+</h:head>
+<h:body>
+	<h:outputStylesheet library="css" name="ubs.css" />
+	<ui:include src="/WEB-INF/cabecalho.xhtml" />
+
+	<h3 id="titulopagina">Especialidade</h3>
+
+	<h:form id="frmPrincipal">
+
+		<p:growl id="message" showDetail="true" life="3000" sticky="false" />
+
+		<p:dataTable id="idResultadoBusca" style="width:700px"
+			paginator="true" rows="10"
+			value="#{especialidadeBean.listarEspecialidade}" var="esp"
+			editable="true">
+
+			<p:ajax event="rowEdit" listener="#{especialidadeBean.onRowEdit}"
+				update="idResultadoBusca,:frmPrincipal:message" />
+			<p:ajax event="rowEditCancel"
+				listener="#{especialidadeBean.onRowCancel}"
+				update="idResultadoBusca,:frmPrincipal:message" />
+
+			<p:column headerText="Especialidades Cadastradas">
+				<p:cellEditor>
+					<f:facet name="output">
+						<h:outputText value="#{esp.nome}" />
+					</f:facet>
+					<f:facet name="input">
+						<h:inputText id="nome" value="#{esp.nome}" />
+					</f:facet>
+				</p:cellEditor>
+			</p:column>
+
+			<p:column style="width:32px">
+				<p:rowEditor />
+			</p:column>
+
+			<f:facet name="footer">
+				<p:commandButton id="btChamaDlgCadastro" value="Novo Item"
+					onclick="PF('dlgCadastro').show();" />
+			</f:facet>
+
+		</p:dataTable>
+	</h:form>
+
+	<p:dialog header="Cadastro" widgetVar="dlgCadastro" modal="true">
+		<h:form id="frmCadastro">
+
+			<p:outputLabel id="lbNome" value="Nome:" />
+			<p:inputText id="txtNome" value="#{especialidadeBean.esp.nome}" />
+
+			<p:commandButton id="btSalvar" value="Salvar" ajax="false"
+				actionListener="#{especialidadeBean.salvar}" update=":frmPrincipal:message"
+				onclick="dlgCadastro.close()">
+			</p:commandButton>
+
+		</h:form>
+	</p:dialog>
+
+	<ui:include src="/WEB-INF/rodape.xhtml" />
+</h:body>
+</html>

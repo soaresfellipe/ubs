@@ -1,0 +1,81 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:head>
+	<title>Cadastro de Medicamentos - UBS+ Web</title>
+</h:head>
+<h:body>
+	<h:outputStylesheet library="css" name="ubs.css" />
+	<ui:include src="/WEB-INF/cabecalho.xhtml" />
+	<h:form id="frm">
+
+		<p:growl id="message" showDetail="true" life="3000" sticky="false" />
+
+		<h3 id="titulopagina">Cadastro de Medicamentos</h3>
+
+		<p:panel header="Cadastro de Medicamentos">
+			<p:panelGrid columns="2">
+				<p:outputLabel for="nome" value="Nome: " />
+				<p:inputText id="nome" value="#{produtoMedicamentoBean.med.nome}" />
+
+				<p:outputLabel for="dtvalidade" value="Data de Validade: " />
+				<p:calendar id="dtvalidade"
+					value="#{produtoMedicamentoBean.med.dtValidade}"></p:calendar>
+
+				<p:outputLabel for="unidademed" value="Unidade de Medida: " />
+				<p:selectOneMenu id="unidademed"
+					value="#{produtoMedicamentoBean.med.unidadeMedida}">
+					<f:selectItem itemLabel="Selecione uma Unidade de Medida"
+						noSelectionOption="true" />
+					<f:selectItem itemLabel="comprimido" itemValue="comprimido(s)" />
+					<f:selectItem itemLabel="cartela" itemValue="cartela(s)" />
+					<f:selectItem itemLabel="caixa" itemValue="caixa(s)" />
+					<f:selectItem itemLabel="unidade" itemValue="unidade(s)" />
+				</p:selectOneMenu>
+
+				<p:outputLabel for="quantatual" value="Quantidade Atual " />
+				<p:inputText id="quantatual"
+					value="#{produtoMedicamentoBean.med.quantAtual}" />
+
+				<p:outputLabel for="quantmin" value="Quantidade Mínima " />
+				<p:inputText id="quantmin"
+					value="#{produtoMedicamentoBean.med.quantMin}" />
+
+				<p:outputLabel for="classificacao"
+					value="Classificação do medicamento: " />
+				<p:selectOneMenu id="classificacao"
+					value="#{produtoMedicamentoBean.med.classificacao}">
+					<f:selectItem itemLabel="Selecionar a Tarja" itemValue=""
+						noSelectionOption="false" />
+					<f:selectItem itemLabel="Tarja Vermelha" itemValue="1" />
+					<f:selectItem itemLabel="Tarja Amarela" itemValue="2" />
+					<f:selectItem itemLabel="Tarja Preta" itemValue="3" />
+				</p:selectOneMenu>
+
+				<p:outputLabel for="ubs" value="Medicamento destinado à UBS: " />
+				<p:selectOneMenu id="ubs" value="#{produtoMedicamentoBean.ubs.id}">
+					<f:selectItem itemLabel="Selecionar a UBS" itemValue=""
+						noSelectionOption="false" />
+					<f:selectItems value="#{produtoMedicamentoBean.listaUBS}" var="ubs"
+						itemLabel="#{ubs.nome}" itemValue="#{ubs.id}" />
+				</p:selectOneMenu>
+
+			</p:panelGrid>
+
+
+			<p:commandButton id="cmdsalvar" value="Salvar"
+				update=":frm,:frm:message"
+				action="#{produtoMedicamentoBean.salvar()}">
+			</p:commandButton>
+
+
+		</p:panel>
+	</h:form>
+	<ui:include src="/WEB-INF/rodape.xhtml" />
+</h:body>
+</html>

@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="medicamentosRetiradosPorPeriodo" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="64fbe1fa-144a-4c9c-bb08-d86c942adbf0">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="table">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_CH" mode="Opaque" backcolor="#E6F3FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="Table Dataset 1" uuid="3af6dfd7-3eb9-4906-ab6d-70e43ce1d6d1"/>
+	<parameter name="dtInicio" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="dtFim" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select p.nome as medicamento,sum(r.quant),u.nome as ubs, u.localidade
+from RECEITA r, PRODUTO p,AGENDA a, UBS u
+where r.id_medicamento = p.id
+and r.id_agenda = a.id
+and a.id_ubs = u.id
+and r.status = 'Concluído'
+and r.dtencerramento between $P{dtInicio} and $P{dtFim}
+group by p.nome
+order by sum(r.quant) desc;]]>
+	</queryString>
+	<field name="medicamento" class="java.lang.String"/>
+	<field name="sum(r.quant)" class="java.math.BigDecimal"/>
+	<field name="ubs" class="java.lang.String"/>
+	<field name="localidade" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="101" splitType="Stretch">
+			<rectangle>
+				<reportElement x="6" y="6" width="546" height="91" forecolor="#FFFFFF" backcolor="#C0D9D9" uuid="3c488ce6-44e2-4830-af6c-e7d0c4070317"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="8" y="11" width="130" height="65" forecolor="#0000FF" uuid="9b8a4fd9-ba8e-403b-b6f7-6eb2e4f1cff7"/>
+				<textElement>
+					<font fontName="SansSerif" size="36" isBold="true"/>
+				</textElement>
+				<text><![CDATA[UBS+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="136" y="64" width="321" height="33" uuid="d1fc5882-b4ab-4dd7-a773-8c0b2413e718"/>
+				<textElement>
+					<font fontName="SansSerif" size="14"/>
+				</textElement>
+				<text><![CDATA[Medicamentos retirados - Receita Interna]]></text>
+			</staticText>
+			<textField pattern="EEEEE dd MMMMM yyyy">
+				<reportElement x="376" y="11" width="169" height="20" uuid="c5a6b5ae-17f6-42d2-8456-429540273276"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="71" splitType="Stretch">
+			<staticText>
+				<reportElement x="8" y="40" width="141" height="25" uuid="90b381c8-d7b3-489a-8984-24c9ad420e8e"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Medicamento]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="6" y="9" width="195" height="26" uuid="4807568d-c8dc-4709-bd2c-c42dca0ff0f1"/>
+				<textElement>
+					<font size="11"/>
+				</textElement>
+				<text><![CDATA[Relatório referente ao período de ]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="201" y="9" width="78" height="26" uuid="0008becd-f82e-4516-b258-75932fa22f6e"/>
+				<textElement>
+					<font size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{dtInicio}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="false">
+				<reportElement x="305" y="9" width="65" height="26" uuid="92556ea4-7f1e-4b29-b08a-be697eadc051"/>
+				<textElement>
+					<font size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{dtFim}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="279" y="9" width="39" height="26" uuid="2880577f-a7c9-4477-926a-e2a09b543309"/>
+				<textElement>
+					<font size="11"/>
+				</textElement>
+				<text><![CDATA[a]]></text>
+			</staticText>
+			<line>
+				<reportElement x="5" y="36" width="547" height="1" uuid="b23a7943-f4aa-4f90-973b-dccbbc795d19"/>
+				<graphicElement>
+					<pen lineWidth="1.25" lineStyle="Double"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="6" y="69" width="546" height="1" uuid="681b0383-ae6b-46bf-a74f-c0c1f6ba22b4"/>
+				<graphicElement>
+					<pen lineWidth="1.25" lineStyle="Solid"/>
+				</graphicElement>
+			</line>
+			<line direction="BottomUp">
+				<reportElement positionType="Float" mode="Transparent" x="153" y="39" width="1" height="32" uuid="06561670-d9ca-42df-9256-a25e02ad1a18"/>
+			</line>
+			<line direction="BottomUp">
+				<reportElement positionType="Float" mode="Transparent" x="293" y="39" width="1" height="32" uuid="7f0355d5-3f6e-4a51-91b2-35f610d343c6"/>
+			</line>
+			<staticText>
+				<reportElement x="297" y="35" width="112" height="35" uuid="171aeaf3-9cee-4d5f-884b-1889ec9a26bc"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[UBS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="416" y="39" width="136" height="26" uuid="2a44f549-0b02-4c44-b3b1-08ffc4693300"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Localidade]]></text>
+			</staticText>
+			<line direction="BottomUp">
+				<reportElement positionType="Float" mode="Transparent" x="412" y="36" width="1" height="32" uuid="594f2935-2f5b-4255-a185-264a624e0bf2"/>
+			</line>
+			<staticText>
+				<reportElement x="158" y="39" width="130" height="30" uuid="24dce86e-2b17-4894-9ae9-260b874fd36a"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Quantidade por período]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="25" splitType="Stretch">
+			<line direction="BottomUp">
+				<reportElement positionType="Float" mode="Transparent" x="153" y="1" width="1" height="24" uuid="ce18b6cb-b2b7-4215-898c-d67fc4debe9e"/>
+			</line>
+			<line direction="BottomUp">
+				<reportElement positionType="Float" mode="Transparent" x="293" y="-1" width="1" height="24" uuid="901a79d2-ec25-4e52-8e3e-a9828ec2a806"/>
+			</line>
+			<textField>
+				<reportElement x="7" y="4" width="141" height="20" uuid="66d55053-a49c-47d3-818d-a9dbf5fc1398"/>
+				<textFieldExpression><![CDATA[$F{medicamento}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="298" y="3" width="111" height="20" uuid="a36693ed-65fc-476d-8ce4-bbdd482f7c7f"/>
+				<textFieldExpression><![CDATA[$F{ubs}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="418" y="3" width="134" height="20" uuid="6a0c7773-c02d-4355-a314-28199e5195b3"/>
+				<textFieldExpression><![CDATA[$F{localidade}]]></textFieldExpression>
+			</textField>
+			<line direction="BottomUp">
+				<reportElement positionType="Float" mode="Transparent" x="412" y="0" width="1" height="24" uuid="c420005c-72b0-4cb1-9be4-e79f869f98b0"/>
+			</line>
+			<textField>
+				<reportElement x="162" y="3" width="117" height="20" uuid="a6de127e-4b84-4e50-98ce-5635be1f1a8a"/>
+				<textFieldExpression><![CDATA[$F{sum(r.quant)}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="38" splitType="Stretch">
+			<textField>
+				<reportElement x="423" y="17" width="80" height="20" uuid="55759ae8-3ee6-45cb-b044-ccda843c2653"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="510" y="17" width="40" height="20" uuid="87740320-a707-49b4-8836-60c1ade9f858"/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>

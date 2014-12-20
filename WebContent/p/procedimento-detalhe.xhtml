@@ -1,0 +1,96 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:head>
+	<title>Detalhamento do Procedimento - UBS+ Web</title>
+</h:head>
+<h:body>
+	<h:outputStylesheet library="css" name="ubs.css" />
+	<ui:include src="/WEB-INF/cabecalho.xhtml" />
+	<p:panel>
+		<h3 id="titulopagina">Detalhamento do Procedimento</h3>
+
+		<h:form id="frmDetalheProcedimento">
+
+			<!-- Campo Nome do Procedimento -->
+			<p:outputLabel for="nome" value="Nome: " />
+			<p:inputText id="nome" size="47"
+				value="#{procedimentoBean.proc.nome}" />
+
+			<br />
+			<br />
+
+			<!-- Campo Grupo -->
+			<p:outputLabel for="grupo" value="Grupo de Procedimentos: " />
+			<p:selectOneMenu id="grupo" value="#{procedimentoBean.grupo.id}">
+				<f:selectItem itemLabel="Selecionar o Grupo" itemValue=""
+					noSelectionOption="false" />
+				<f:selectItems value="#{grupoProcBean.lista}" var="grupo"
+					itemValue="#{grupo.id}" itemLabel="#{grupo.nome}" />
+			</p:selectOneMenu>
+
+			<br />
+			<br />
+
+			<!-- Campo Código TUSS -->
+			<p:outputLabel for="codTuss" value="Código TUSS: " />
+			<p:inputText id="codTuss" size="10"
+				value="#{procedimentoBean.proc.codTUSS}" />
+
+			<!-- Campo Código AMB -->
+			<p:outputLabel for="codAMB" value="Código AMB: " />
+			<p:inputText id="codAMB" size="10"
+				value="#{procedimentoBean.proc.codAMB}" />
+
+			<br />
+			<br />
+
+			<!-- Campo Valor Referência -->
+			<p:outputLabel for="valRef"
+				value="Valores de Referência (Será impresso no exame): " />
+			<br />
+			<br />
+			<p:inputTextarea id="valRef" rows="6" cols="55"
+				value="#{procedimentoBean.proc.valorReferencia}" />
+
+			<br />
+			<br />
+
+			<h4>
+				<b>Variáveis do Procedimento</b>
+			</h4>
+
+			<p:pickList id="pickProcVar" value="#{procedimentoBean.variaveis}"
+				var="var" iconOnly="true" effect="fade"
+				itemLabel="#{var.nome}"
+				converter="procVarConverter" itemValue="#{var}">
+				<f:facet name="sourceCaption">Variáveis Disponiveis</f:facet>
+				<f:facet name="targetCaption">Variáveis do Procedimento</f:facet>
+			</p:pickList>
+			
+			<br />
+			
+			<!-- Botões da Tela -->
+			<p:commandButton actionListener="#{procedimentoBean.salvar}" value="Gravar"
+				action="procedimento.xhtml?faces-redirect=true"
+				icon="ui-icon-disk" />
+			
+			<p:spacer height="10" />
+				
+			<p:commandButton value="Cancelar" icon="ui-icon-cancel" />
+
+			<br />
+			<br />
+
+		</h:form>
+		
+		<div id="clear"></div>
+		<ui:include src="/WEB-INF/rodape.xhtml" />
+	</p:panel>
+</h:body>
+</html>

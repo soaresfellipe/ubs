@@ -1,0 +1,83 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<title>Enfermaria - UBS+ Web</title>
+	
+</h:head>
+
+<h:body>
+
+	<h:outputStylesheet library="css" name="ubs.css" />
+	<ui:include src="/WEB-INF/cabecalho.xhtml" />
+
+
+	<h:form id="principal">
+
+		<p:growl id="message" showDetail="true" life="3000" sticky="false" />
+
+		<!--  Tabela de medicamentos a serem aplicados -->
+
+		<p:commandButton value="Atualizar Lista" id="btAtualiza"
+			action="#{enfermariaBean.atualizaLista}"
+			update=":dtReceitasPendentes" ajax="false" />
+
+		<p:dataTable id="dtReceitasPendentes"
+			value="#{enfermariaBean.listaReceitas}"
+			selection="#{enfermariaBean.receitaSelecionada}"
+			selectionMode="single" rowKey="#{receita.id}" var="receita">
+			<f:facet name="header">
+				<p:outputLabel value="Medicamentos a serem aplicados" />
+			</f:facet>
+
+			<!-- Coluna código  -->
+			<p:column headerText="Código" style="width:60px;text-align: center">
+				<h:outputText value="#{receita.id}" />
+			</p:column>
+
+			<!-- Coluna nome do paciente  -->
+			<p:column headerText="Paciente">
+				<h:outputText value="#{receita.paciente.pessoa.nome}" />
+			</p:column>
+
+			<!-- Coluna nome do Médico  -->
+			<p:column headerText="Médico">
+				<h:outputText value="#{receita.agenda.medico.pessoa.nome}" />
+			</p:column>
+
+			<!-- Coluna nome do Medicamento -->
+			<p:column headerText="Medicamento">
+				<h:outputText value="#{receita.medicamento.nome}" />
+			</p:column>
+
+			<!-- Coluna Quantidade -->
+			<p:column>
+				<h:outputText value="#{receita.quant}" />
+			</p:column>
+
+			<!-- Coluna Descrição -->
+			<p:column>
+				<h:outputText value="#{receita.descricao}" />
+			</p:column>
+
+			<!-- Botão para aplicar -->
+			<f:facet name="footer">
+				<p:commandButton value="Aplicar" id="btAplicar"
+					icon="ui-icon-carat-1-e"
+					action="#{enfermariaBean.aplicarMedicamento}" update=":principal:message">
+				</p:commandButton>
+			</f:facet>
+		</p:dataTable>
+
+	</h:form>
+
+	<ui:include src="/WEB-INF/rodape.xhtml" />
+</h:body>
+</html>

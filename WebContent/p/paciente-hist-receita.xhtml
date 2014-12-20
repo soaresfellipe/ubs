@@ -1,0 +1,55 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:head>
+	<title>Histórico de Receitas - UBS+ Web</title>
+</h:head>
+<h:body>
+	<h:outputStylesheet library="css" name="ubs.css" />
+	<ui:include src="/WEB-INF/cabecalho.xhtml" />
+	<p:panel id="panelExames" header="Exames por Paciente">
+		<h:form id="frmPesquisaReceita">
+			<br />
+			<p:dataTable id="buscaReceita"
+				value="#{agendaOnlineBean.listaRecProntuario}" rowKey="#{rec.id}"
+				selectionMode="single"
+				selection="#{relatorioBean.receitaSelecionada}" var="rec">
+
+				<p:column headerText="Data solicitação">
+					<p:calendar value="#{rec.dtCriacao}" id="dtCriacao" 
+						pattern="dd/MM/yyyy" mask="true" maxlength="8" size="8" />
+				</p:column>
+				<p:column headerText="Data validade">
+					<p:calendar value="#{rec.dtValidade}" id="dtValidade" 
+						pattern="dd/MM/yyyy" mask="true" maxlength="8" size="8" />
+				</p:column>
+				<p:column headerText="Descrição">
+					<h:outputText value="#{rec.descricao}" />
+				</p:column>
+				<p:column headerText="Status">
+					<h:outputText value="#{rec.status}" />
+				</p:column>
+				<p:column headerText="Medicamento">
+					<h:outputText value="#{rec.medicamento.nome}" />
+				</p:column>
+				<p:column headerText="Quantidade">
+					<h:outputText value="#{rec.quant}" />
+				</p:column>
+				<p:column headerText="Unidade Medida">
+					<h:outputText value="#{rec.medicamento.unidadeMedida}" />
+				</p:column>
+				<f:facet name="footer">
+					<p:commandButton value="Gerar receita"
+						action="#{relatorioBean.receita}" ajax="false" />
+				</f:facet>
+			</p:dataTable>
+		</h:form>
+		<ui:include src="/WEB-INF/rodape.xhtml" />
+	</p:panel>
+</h:body>
+</html>

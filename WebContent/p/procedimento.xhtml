@@ -1,0 +1,146 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:head>
+	<title>Procedimentos - UBS+ Web</title>
+</h:head>
+<h:body>
+	<h:outputStylesheet library="css" name="ubs.css" />
+	<ui:include src="/WEB-INF/cabecalho.xhtml" />
+	<p:panel id="panelProcedimentos" header="Procedimentos">
+		<h:form id="frmPesquisaProcedimento">
+
+			<p:growl id="message" showDetail="true" life="3000" sticky="false" />
+
+			<!--  Campo de Busca por Nome do Procedimento -->
+
+			<p:focus />
+			<h:outputLabel for="idNome" value="Pesquisar por nome: " />
+
+			<p:inputText maxlenght="50" size="50" id="idNome" required="FALSE"
+				value="#{procedimentoBean.nome}">
+				<p:ajax event="keyup" listener="#{procedimentoBean.findByNome()}"
+					update="resultadoBusca" />
+			</p:inputText>
+
+			<!--  Botão Incluir Pessoa -->
+			<p:commandButton value="Inserir Novo Procedimento"
+				action="procedimento-detalhe.xhtml?faces-redirect=true" ajax="false"
+				icon="ui-icon-plus">
+			</p:commandButton>
+
+			<p:spacer height="25" />
+
+			<br />
+			<br />
+
+			<!-- Tabela de Resultados da Pesquisa -->
+
+			<p:dataTable id="resultadoBusca" var="proc"
+				value="#{procedimentoBean.lista}"
+				selection="#{procedimentoBean.proc}" selectionMode="single"
+				rowKey="#{proc.id}" paginator="TRUE" rows="10">
+
+				<!-- Coluna NOME -->
+				<p:column style="width:600px;" headerText="Nome do Procedimento">
+					<h:outputText value="#{proc.nome}" />
+				</p:column>
+
+				<!-- Coluna Código TUSS -->
+				<p:column style="width:100px;" headerText="Código TUSS">
+					<h:outputText value="#{proc.codTUSS}" />
+				</p:column>
+
+				<!-- Coluna Código AMB -->
+				<p:column style="width:100px;" headerText="Código AMB">
+					<h:outputText value="#{proc.codAMB}" />
+				</p:column>
+
+				<p:column style="width:32px;text-align: center">
+					<p:commandButton oncomplete="PF('dlgProcDetalhe').show()"
+						action="#{procedimentoBean.procDetalhe}" update=":frmProcDetalhe"
+						icon="ui-icon-search" title="View">
+						<f:setPropertyActionListener value="#{proc}"
+							target="#{procedimentoBean.proc}" />
+					</p:commandButton>
+				</p:column>
+			</p:dataTable>
+		</h:form>
+
+		<p:dialog resizable="FALSE" id="dlgProcDetalhe"
+			header="Edição de Procedimento" modal="TRUE"
+			widgetVar="dlgProcDetalhe">
+			<h:form id="frmProcDetalhe">
+				<p:panel>
+					<p:panelGrid id="pgProcDetalhe" columns="2">
+						<p:outputLabel for="nome" style="color:gray;font-weight:bold"
+							value="Nome: " />
+						<p:inputText id="nome" size="47"
+							value="#{procedimentoBean.proc.nome}" />
+
+						<p:outputLabel for="grupo" style="color:gray;font-weight:bold"
+							value="Grupo de Procedimentos: " />
+						<p:selectOneMenu id="grupo" value="#{procedimentoBean.grupo.id}">
+							<f:selectItem itemLabel="Selecionar o Grupo" itemValue=""
+								noSelectionOption="false" />
+							<f:selectItems value="#{grupoProcBean.lista}" var="grupo"
+								itemValue="#{grupo.id}" itemLabel="#{grupo.nome}" />
+						</p:selectOneMenu>
+
+						<p:outputLabel for="codTuss" style="color:gray;font-weight:bold"
+							value="Código TUSS: " />
+						<p:inputText id="codTuss" size="10"
+							value="#{procedimentoBean.proc.codTUSS}" />
+
+						<p:outputLabel for="codAMB" style="color:gray;font-weight:bold"
+							value="Código AMB: " />
+						<p:inputText id="codAMB" size="10"
+							value="#{procedimentoBean.proc.codAMB}" />
+					</p:panelGrid>
+					<br />
+					<!-- Campo Valor Referência -->
+					<p:outputLabel style="color:gray;font-weight:bold" for="valRef"
+						value="Valores de Referência (Será impresso no exame): " />
+					<br />
+					<p:inputTextarea id="valRef" rows="6" cols="80"
+						value="#{procedimentoBean.proc.valorReferencia}" />
+
+					<br />
+					<br />
+					<p:outputLabel for="valRef" style="color:gray;font-weight:bold"
+						value="Variáveis do Procedimento:" />
+					<br />
+					<p:pickList id="pickProcVar" value="#{procedimentoBean.variaveis}"
+						var="var" iconOnly="true" effect="fade" itemLabel="#{var.nome}"
+						converter="procVarConverter" itemValue="#{var}">
+						<f:facet name="sourceCaption">Variáveis Disponiveis</f:facet>
+						<f:facet name="targetCaption">Variáveis do Procedimento</f:facet>
+					</p:pickList>
+
+					<p:toolbar style="width:500px;">
+						<f:facet name="left">
+							<p:commandButton styleClass="ui-priority-primary"
+								update=":frmPesquisaProcedimento:message" action="#{procedimentoBean.editar}"
+								onclick="PF('dlgProcDetalhe').close()"
+								value="Gravar Alterações" icon="ui-icon-disk" />
+						</f:facet>
+						<f:facet name="right">
+							<p:commandButton styleClass="ui-priority-primary"
+								action="procedimento.xhtml?faces-redirect=true" value="Cancelar"
+								icon="ui-icon-cancel" />
+						</f:facet>
+					</p:toolbar>
+
+				</p:panel>
+			</h:form>
+		</p:dialog>
+
+		<ui:include src="/WEB-INF/rodape.xhtml" />
+	</p:panel>
+</h:body>
+</html>

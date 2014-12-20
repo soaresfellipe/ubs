@@ -1,0 +1,84 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:head>
+	<title>Variáveis de Exame - UBS+ Web</title>
+</h:head>
+<h:body>
+	<h:outputStylesheet library="css" name="ubs.css" />
+	<ui:include src="/WEB-INF/cabecalho.xhtml" />
+	<p:panel>
+		<h3 id="titulopagina">Variáveis de Exame</h3>
+
+		<h:form id="frmVar">
+
+			<p:growl id="message" showDetail="true" life="3000" sticky="false" />
+
+			<p:dataTable id="idResultadoBusca" style="width:700px"
+				paginator="true" rows="10" value="#{variavelBean.listarVariavel}"
+				var="var" editable="true">
+
+				<p:ajax event="rowEdit" listener="#{variavelBean.onRowEdit}"
+					update="idResultadoBusca, :frmVar:message" />
+				<p:ajax event="rowEditCancel" listener="#{variavelBean.onRowCancel}"
+					update="idResultadoBusca,:frmVar:message" />
+
+				<p:column headerText="Variáveis Cadastradas">
+					<p:cellEditor>
+						<f:facet name="output">
+							<h:outputText value="#{var.nome}" />
+						</f:facet>
+						<f:facet name="input">
+							<h:inputText id="nome" value="#{var.nome}" />
+						</f:facet>
+					</p:cellEditor>
+				</p:column>
+
+				<p:column style="width:32px">
+					<p:rowEditor />
+				</p:column>
+
+				<f:facet name="footer">
+					<p:commandButton id="btChamaDlgCadastro" value="Novo Item"
+						onclick="PF('dlgCadastro').show();" />
+				</f:facet>
+
+			</p:dataTable>
+		</h:form>
+
+		<p:dialog header="Cadastro" widgetVar="dlgCadastro" modal="true">
+			<h:form id="frmCadastro">
+
+				<p:outputLabel id="lbNome" value="Nome: " />
+				<p:inputText id="txtNome" value="#{variavelBean.variavel.nome}" />
+
+				<p:commandButton id="btSalvar" value="Salvar" ajax="false"
+					actionListener="#{variavelBean.salvar}"
+					onclick="dlgCadastro.close()" update=":frmVar:message">
+				</p:commandButton>
+
+			</h:form>
+		</p:dialog>
+
+		<p:dialog header="Editar" widgetVar="dlgEditar" modal="true">
+			<h:form id="frmEditar">
+
+				<p:outputLabel id="lbNomeEdit" value="Nome: " />
+				<p:inputText id="txtNomeEdit" value="#{variavelBean.variavel.nome}" />
+
+				<p:commandButton id="btEditar" value="Salvar"
+					actionListener="#{variavelBean.editar}" update=":frmVar:message"
+					onclick="dlgEditar.close()">
+				</p:commandButton>
+
+			</h:form>
+		</p:dialog>
+		<ui:include src="/WEB-INF/rodape.xhtml" />
+	</p:panel>
+</h:body>
+</html>

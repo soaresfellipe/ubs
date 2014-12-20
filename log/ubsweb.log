@@ -1,0 +1,4 @@
+09:18:51,310 INFO  [LoginBean] Iniciando validação de login
+09:18:54,595 DEBUG [LoginControle] Método que realiza a validação do Login na aplicação
+09:18:54,620 DEBUG [LoginControle] EJBQueryImpl(ReadAllQuery(name="Pessoa.validaLogin" referenceClass=Pessoa sql="SELECT ID, BAIRRO, CELULAR, CEP, CIDADE, CPF, DTNASCIMENTO, IND_ADM, IND_DEPENDENTE, IND_FUNC, IND_PACIENTE, LOGRADOURO, NOME, RG, SENHA, TELEFONE, UF FROM PESSOA WHERE (((CPF = ?) AND (SENHA = ?)) AND (DTNASCIMENTO = ?))"))
+09:18:54,798 INFO  [LoginBean] Logando e colocando usuário na sessão...

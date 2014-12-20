@@ -1,0 +1,346 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:head>
+	<title>Pessoas - UBS+ Web</title>
+</h:head>
+<h:body>
+	<h:outputStylesheet library="css" name="ubs.css" />
+	<ui:include src="/WEB-INF/cabecalho.xhtml" />
+
+	<h:form id="dadosPessoa">
+
+		<p:growl id="message" showDetail="true" life="3000" sticky="false" />
+
+		<p:panel id="pnl2" visible="#{pessoaBean.habilitaBusca}">
+
+
+
+			<!--  Campo Nome busca-->
+
+			<p:focus />
+			<h:outputLabel for="idnome" value="Pesquisar por Nome: "
+				 />
+
+			<p:inputText maxlenght="50" size="50" id="idnome" required="FALSE"
+				value="#{pessoaBean.nome}">
+				<p:ajax event="keyup" listener="#{pessoaBean.findByNome}"
+					update="resultadoBusca" />
+			</p:inputText>
+
+			<p:spacer height="25" />
+
+
+			
+			<br />
+			<br />
+			<!--  Tabela com resultado da busca por nome -->
+			<p:dataTable id="resultadoBusca" value="#{pessoaBean.listaPessoas}"
+				var="pessoa" selection="#{pessoaBean.pessoa}" selectionMode="single"
+				rowKey="#{pessoa.id}">
+
+				<f:facet name="header">  
+            	Click na linha e depois click em "Mais" para ver detalhes  
+        	</f:facet>
+				<p:column headerText="Nome">
+					<h:outputText value="#{pessoa.nome}" />
+				</p:column>
+				<p:column headerText="Bairro">
+					<h:outputText value="#{pessoa.bairro}" />
+				</p:column>
+				<p:column headerText="Código SUS">
+					<h:outputText value="#{pessoa.paciente.cns}" />
+				</p:column>
+
+				<f:facet name="footer">
+					<p:commandButton value="Mais" update=":dadosPessoa"
+						action="#{pessoaBean.findByNome()}">
+					</p:commandButton>
+				</f:facet>
+			</p:dataTable>
+
+		</p:panel>
+
+		<p:panel id="pnltab" visible="#{pessoaBean.habilitaTab}">
+			<p:tabView>
+				<p:tab title="Dados Gerais">
+
+					<!--  Campo Nome -->
+					<h:outputLabel for="nome2" value="Nome "
+						rendered="#{pessoaBean.habilitaTab}" />
+					<p:inputText id="nome2" value="#{pessoaBean.pessoa.nome}" size="50"
+						rendered="#{pessoaBean.habilitaTab}" />
+					<p:spacer height="25" />
+
+					<!--  Campo CPF  -->
+
+					<br />
+					<h:outputLabel for="cpf" value="CPF: "
+						rendered="#{pessoaBean.habilitaTab}" />
+					<p:inputMask id="cpf" size="20" maxlenght="11"
+						mask="999.999.999-99" required="FALSE"
+						requiredMessage="Campo obrigatório não preenchido"
+						value="#{pessoaBean.pessoa.cpf}"
+						rendered="#{pessoaBean.habilitaTab}" />
+
+					<!--  Campo RG  -->
+
+					<p:spacer width="25" />
+					<h:outputLabel for="rg" value="RG: "
+						rendered="#{pessoaBean.habilitaTab}" />
+					<p:inputText id="rg" size="20" value="#{pessoaBean.pessoa.rg}"
+						rendered="#{pessoaBean.habilitaTab}" />
+
+
+					<!--  Campo Data de Nascimento  -->
+
+					<p:spacer width="25" />
+					<h:outputLabel for="dataNascimento" value="Data de Nascimento: "
+						rendered="#{pessoaBean.habilitaTab}" />
+					<p:calendar id="dataNascimento" locale="pt_BR"
+						showButtonPanel="true" navigator="true"
+						value="#{pessoaBean.pessoa.dtNascimento}" pattern="dd/MM/yyyy"
+						yearRange="2013:2300" rendered="#{pessoaBean.habilitaTab}" />
+					<p:spacer height="25" />
+
+
+					<!--  Campo Logradouro  -->
+
+					<br />
+					<h:outputLabel for="logradouro" value="Logradouro: "
+						rendered="#{pessoaBean.habilitaTab}" />
+					<p:inputText maxlenght="80" size="80" id="logradouro"
+						value="#{pessoaBean.pessoa.logradouro}"
+						rendered="#{pessoaBean.habilitaTab}" />
+					<p:spacer height="25" />
+
+
+					<!--  Campo UF  -->
+
+					<br />
+					<h:outputLabel for="uf" value="UF: "
+						rendered="#{pessoaBean.habilitaTab}" />
+					<p:inputText maxlenght="2" size="2" id="uf" required="FALSE"
+						rendered="#{pessoaBean.habilitaTab}"
+						requiredMessage="Campo obrigatório não preenchido"
+						value="#{pessoaBean.pessoa.uf}" />
+
+
+					<!--  Campo Cidade  -->
+
+
+					<p:spacer width="25" />
+					<h:outputLabel for="cidade" value="Cidade: "
+						rendered="#{pessoaBean.habilitaTab}" />
+					<p:inputText maxlenght="40" size="40" id="cidade" required="FALSE"
+						requiredMessage="Campo obrigatório não preenchido"
+						value="#{pessoaBean.pessoa.cidade}"
+						rendered="#{pessoaBean.habilitaTab}" />
+
+
+					<!--  Campo Bairro  -->
+
+					<p:spacer width="25" />
+					<h:outputLabel for="bairro" value="Bairro: "
+						rendered="#{pessoaBean.habilitaTab}" />
+					<p:inputText maxlenght="40" size="40" id="bairro" required="FALSE"
+						requiredMessage="Campo obrigatório não preenchido"
+						value="#{pessoaBean.pessoa.bairro}"
+						rendered="#{pessoaBean.habilitaTab}" />
+
+
+					<!--  Campo CEP  -->
+
+
+					<p:spacer width="25" />
+					<h:outputLabel for="cep" value="CEP: "
+						rendered="#{pessoaBean.habilitaTab}" />
+					<p:inputMask maxlenght="8" size="12" mask="99.999-999" id="cep"
+						value="#{pessoaBean.pessoa.cep}"
+						rendered="#{pessoaBean.habilitaTab}" />
+					<p:spacer height="25" />
+
+
+					<!--  Campo Telefone Residencial  -->
+
+					<br />
+					<h:outputLabel for="foneResidencial" value="Telefone Residencial: "
+						rendered="#{pessoaBean.habilitaTab}" />
+					<p:inputMask maxlenght="10" size="16" mask="(99) 9999-9999"
+						id="foneResidencial" value="#{pessoaBean.pessoa.telefone}"
+						rendered="#{pessoaBean.habilitaTab}" />
+
+
+					<!--  Campo Telefone Celular  -->
+
+
+					<p:spacer width="25" />
+					<h:outputLabel for="foneCelular" value="Telefone Celular: "
+						rendered="#{pessoaBean.habilitaTab}" />
+					<p:inputMask maxlenght="11" size="18" mask="(99) 99999-9999"
+						id="foneCelular" value="#{pessoaBean.pessoa.celular}"
+						rendered="#{pessoaBean.habilitaTab}" />
+					<p:spacer height="25" />
+					
+					<p:outputLabel for="pwd" value="Senha:"/>
+					<p:password id="pwd" value="#{pessoaBean.pessoa.senha}"></p:password>
+				</p:tab>
+
+				<p:tab title="Dados Paciente">
+
+					<h:outputLabel for="codsusv" value="Código SUS: "
+						rendered="#{pessoaBean.habilitaTab}" />
+					<p:inputText id="codsusv" value="#{pessoaBean.paciente.cns}"></p:inputText>
+
+					<!--  <h:outputLabel for="indpne"	value="Portador de Necessidades Especiais: " />  -->
+					<!--  <p:selectBooleanCheckbox id="indpne" /> -->
+
+					<h:outputLabel for="faltasv" value="Quant. de Faltas: " />
+					<p:inputText readonly="TRUE" id="faltasv"
+						value="#{pessoaBean.paciente.quantFalta}" />
+					<br />
+
+					<h:outputLabel for="observacoesv" value="Observações: " />
+
+					<p:inputTextarea style="width:350px; height:100px;"
+						id="observacoesv" value="#{pessoaBean.paciente.observacoes}" />
+
+
+
+				</p:tab>
+				<p:tab title="Dados Analista Clínico"
+					disabled="#{(pessoaBean.pessoa.ind_adm==1)}">
+					<h:panelGrid id="pgcboac" columns="2" cellpadding="4">
+						<h:outputLabel for="codcboAC" value="Código CBO: " />
+						<p:inputText id="codcboAC" value="#{pessoaBean.func1.codCBO}" />
+						<h:outputLabel for="crf1" value="CRF: " />
+						<p:inputText id="crf1" value="#{pessoaBean.func1.crf}" />
+						<h:outputLabel for="ufConselho1" value="UF-Conselho" />
+						<p:inputText id="ufConselho1"
+							value="#{pessoaBean.func1.ufConselho}" />
+						<p:pickList id="pickUBSAC" value="#{pessoaBean.dualListUBSAC}"
+							var="ubs" iconOnly="true" effect="fade"
+							itemLabel="#{ubs.localidade} - #{ubs.nome}"
+							converter="funcUBSConverter" itemValue="#{ubs}">
+							<f:facet name="sourceCaption">Disponivel</f:facet>
+							<f:facet name="targetCaption">Selecionadas</f:facet>
+						</p:pickList>
+					</h:panelGrid>
+				</p:tab>
+				<p:tab title="Dados Atendente"
+					disabled="#{(pessoaBean.pessoa.ind_adm==1)}">
+					<h:panelGrid id="pgcbo" columns="2" cellpadding="4">
+						<h:outputLabel for="codcboAT" value="Código CBO: " />
+						<p:inputText id="codcboAT" value="#{pessoaBean.func2.codCBO}" />
+						<p:pickList id="pickUBSAt" value="#{pessoaBean.dualListUBSAt}"
+							var="ubs" iconOnly="true" effect="fade"
+							itemLabel="#{ubs.localidade} - #{ubs.nome}"
+							converter="funcUBSConverter" itemValue="#{ubs}">
+							<f:facet name="sourceCaption">Disponivel</f:facet>
+							<f:facet name="targetCaption">Selecionadas</f:facet>
+						</p:pickList>
+					</h:panelGrid>
+				</p:tab>
+				<p:tab title="Dados Enfermeiro"
+					disabled="#{(pessoaBean.pessoa.ind_adm==1)}">
+					<h:panelGrid id="pgEnf" columns="2" cellpadding="4">
+						<h:outputLabel for="codcboENF" value="Código CBO: " />
+						<p:inputText id="codcboENF" value="#{pessoaBean.func3.codCBO}" />
+						<h:outputLabel for="coren" value="COREN " />
+						<p:inputText id="coren" value="#{pessoaBean.func3.coren}" />
+						<h:outputLabel for="ufConselho2" value="UF-Conselho" />
+						<p:inputText id="ufConselho2"
+							value="#{pessoaBean.func3.ufConselho}" />
+						<p:pickList id="pickUBSEnf" value="#{pessoaBean.dualListUBSEnf}"
+							var="ubs" iconOnly="true" effect="fade"
+							itemLabel="#{ubs.localidade} - #{ubs.nome}"
+							converter="funcUBSConverter" itemValue="#{ubs}">
+							<f:facet name="sourceCaption">Disponivel</f:facet>
+							<f:facet name="targetCaption">Selecionadas</f:facet>
+						</p:pickList>
+					</h:panelGrid>
+				</p:tab>
+				<p:tab title="Dados Estoquista"
+					disabled="#{(pessoaBean.pessoa.ind_adm==1)}">
+					<h:panelGrid id="pgcboEST" columns="2" cellpadding="4">
+						<h:outputLabel for="codcboEST" value="Código CBO: " />
+						<p:inputText id="codcboEST" value="#{pessoaBean.func4.codCBO}" />
+						<p:pickList id="pickUBSEst" value="#{pessoaBean.dualListUBSEst}"
+							var="ubs" iconOnly="true" effect="fade"
+							itemLabel="#{ubs.localidade} - #{ubs.nome}"
+							converter="funcUBSConverter" itemValue="#{ubs}">
+							<f:facet name="sourceCaption">Disponivel</f:facet>
+							<f:facet name="targetCaption">Selecionadas</f:facet>
+						</p:pickList>
+					</h:panelGrid>
+				</p:tab>
+				<p:tab title="Dados Farmacêutico"
+					disabled="#{(pessoaBean.pessoa.ind_adm==1)}">
+					<h:panelGrid id="pgcboFar" columns="2" cellpadding="4">
+						<h:outputLabel for="codcboFAR" value="Código CBO: " />
+						<p:inputText id="codcboFAR" value="#{pessoaBean.func5.codCBO}" />
+						<h:outputLabel for="crf2" value="CRF: " />
+						<p:inputText id="crf2" value="#{pessoaBean.func5.crf}" />
+						<h:outputLabel for="ufConselho3" value="UF-Conselho" />
+						<p:inputText id="ufConselho3"
+							value="#{pessoaBean.func5.ufConselho}" />
+						<p:pickList id="pickUBSFar" value="#{pessoaBean.dualListUBSFar}"
+							var="ubs" iconOnly="true" effect="fade"
+							itemLabel="#{ubs.localidade} - #{ubs.nome}"
+							converter="funcUBSConverter" itemValue="#{ubs}">
+							<f:facet name="sourceCaption">Disponivel</f:facet>
+							<f:facet name="targetCaption">Selecionadas</f:facet>
+						</p:pickList>
+					</h:panelGrid>
+				</p:tab>
+				<p:tab title="Dados Médico"
+					disabled="#{(pessoaBean.pessoa.ind_adm==1)}">
+					<h:panelGrid id="pgMed" columns="2" cellpadding="4">
+						<h:outputLabel for="codcboMED" value="Código CBO: " />
+						<p:inputText id="codcboMED" value="#{pessoaBean.func6.codCBO}" />
+						<h:outputLabel for="crmMED" value="CRM " />
+						<p:inputText id="crmMED" value="#{pessoaBean.func6.crm}" />
+						<h:outputLabel for="ufConselho4" value="UF-Conselho" />
+						<p:inputText id="ufConselho4"
+							value="#{pessoaBean.func6.ufConselho}" />
+						<h:outputLabel for="pickEsp" value="Especialidades:" />
+						<p:pickList id="pickEsp" value="#{pessoaBean.especialidades}"
+							var="esp" iconOnly="true" effect="fade" itemLabel="#{esp.nome}"
+							converter="especialidadeConverter" itemValue="#{esp}">
+							<f:facet name="sourceCaption">Disponivel</f:facet>
+							<f:facet name="targetCaption">Selecionadas</f:facet>
+						</p:pickList>
+						<h:outputLabel for="pickUBSMed"
+							value="Alocar funcionário na(s) UBS(s):" />
+						<p:pickList id="pickUBSMed" value="#{pessoaBean.dualListUBSMed}"
+							var="ubs" iconOnly="true" effect="fade"
+							itemLabel="#{ubs.localidade} - #{ubs.nome}"
+							converter="funcUBSConverter" itemValue="#{ubs}">
+							<f:facet name="sourceCaption">Disponivel</f:facet>
+							<f:facet name="targetCaption">Selecionadas</f:facet>
+						</p:pickList>
+					</h:panelGrid>
+				</p:tab>
+			</p:tabView>
+		</p:panel>
+
+
+		<!-- Botão editar -->
+		<p:commandButton value="Salvar Alterações"
+			update="dadosPessoa,message" style="horizontal-align:center"
+			action="#{pessoaBean.editar()}" rendered="#{pessoaBean.habilitaTab}">
+		</p:commandButton>
+
+		<p:commandButton value="Voltar" rendered="#{pessoaBean.habilitaTab}"
+			action="pessoa.xhtml?faces-redirect=true" ajax="false">
+		</p:commandButton>
+
+	</h:form>
+	<ui:include src="/WEB-INF/rodape.xhtml" />
+</h:body>
+</html>

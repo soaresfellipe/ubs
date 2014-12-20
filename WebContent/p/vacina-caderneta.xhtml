@@ -1,0 +1,131 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:head>
+	<title>Caderneta de Vacinação - UBS+ Web</title>
+</h:head>
+<h:body>
+	<h:outputStylesheet library="css" name="ubs.css" />
+	<ui:include src="/WEB-INF/cabecalho.xhtml" />
+	<p:panel header="Caderneta de Vacinação">
+		<h:form id="frmCaderneta">
+		
+		<p:growl id="message" showDetail="true" life="3000" sticky="false" />		
+		
+			<br />
+			<h:outputLabel for="pacienteNome" value="Nome do Paciente: " />
+			<p:inputText id="pacienteNome" size="50"
+				value="#{vacinacaoBean.paciente.pessoa.nome}" readonly="TRUE" />
+			<p:commandButton icon="ui-icon-search" title="Visualizar"
+				onclick="PF('dlgPesqPaciente').show()">
+			</p:commandButton>
+			<p:spacer width="25" />
+			<br />
+			<br />
+			<p:commandButton value="Visualizar/Atualizar Caderneta"
+				action="#{vacinacaoBean.visualizaCaderneta}" update="vacina" />
+			<br />
+			<br />
+
+			<!-- DataGrid Vacinação -->
+			<p:dataGrid id="vacina" columns="5" var="vacinas" paginator="TRUE"
+				rowsPerPageTemplate="5,10,15"
+				value="#{vacinacaoBean.cadernetaVacinacao}">
+				<f:facet name="header">
+            		Vacinas do Paciente
+        		</f:facet>
+				<p:panel id="panelVacinas" header="#{vacinas.vacina.nome}">
+					<p:panelGrid id="vacinaDose" columns="2">
+
+						<h:outputText value="Data Prevista: " />
+						<h:outputText value="#{vacinas.dtPrevistaAplicacao}">
+							<f:convertDateTime pattern="dd/MM/yyyy" />
+						</h:outputText>
+
+						<h:outputText value="Data Aplicação: " />
+						<h:outputText value="#{vacinas.dtHrAplicacao}">
+							<f:convertDateTime pattern="dd/MM/yyyy" />
+						</h:outputText>
+
+						<h:outputText value="Dose: " />
+						<h:outputText value="#{vacinas.numDose}" />
+
+						<h:outputText value="Status: " />
+						<h:outputText value="#{vacinas.status}" />
+
+						<f:facet name="footer">
+							<center>
+								<p:commandButton id="btnAplicaVacina" value="Aplicar"
+									action="#{vacinacaoBean.editar}" update="vacina,:frmCaderneta:message"
+									disabled="#{!(vacinas.status == 'Pendente')}">
+									<f:setPropertyActionListener value="#{vacinas}"
+										target="#{vacinacaoBean.vacinacao}" />
+									<p:confirm header="Confirmação" message="A aplicação foi realizada?"
+										icon="ui-icon-alert" />
+								</p:commandButton>
+							</center>
+						</f:facet>
+					</p:panelGrid>
+				</p:panel>
+			</p:dataGrid>
+
+		</h:form>
+		<ui:include src="/WEB-INF/rodape.xhtml" />
+	</p:panel>
+
+	<!-- Dialog de Confirmação da Aplicação da Vacina -->
+	<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+		<p:commandButton value="Sim" type="button"
+			styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+		<p:commandButton value="Não" type="button"
+			styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+	</p:confirmDialog>
+
+	<!-- @Fellipe: Dialog de pesquisa do paciente -->
+	<p:dialog id="dlgPesqPaciente" widgetVar="dlgPesqPaciente" width="700"
+		header="Selecionar o Paciente" modal="TRUE" resizable="FALSE"
+		draggable="FALSE">
+		<h:form id="frmPesqPaciente">
+
+			<!-- Campo de Pesquisa -->
+			<p:outputLabel for="idnome" value="Pesquisar por Nome: " />
+			<p:inputText maxlenght="50" size="50" id="idnome" required="FALSE"
+				value="#{vacinacaoBean.nome}">
+				<p:ajax event="keyup"
+					listener="#{vacinacaoBean.findPacientePorNome}"
+					update="resultadoBusca" />
+			</p:inputText>
+			<br />
+			<br />
+			<!-- Tabela de Pessoas -->
+			<p:dataTable id="resultadoBusca"
+				value="#{vacinacaoBean.listaPaciente}" var="paciente"
+				selection="#{vacinacaoBean.paciente}" selectionMode="single"
+				rowKey="#{paciente.id}">
+
+				<p:column headerText="Nome" style="width:400px;text-align: center">
+					<h:outputText value="#{paciente.pessoa.nome}" />
+				</p:column>
+				<p:column headerText="Bairro" style="width:100px;text-align: center">
+					<h:outputText value="#{paciente.pessoa.bairro}" />
+				</p:column>
+				<p:column headerText="Código SUS"
+					style="width:100px;text-align: center">
+					<h:outputText value="#{paciente.cns}" />
+				</p:column>
+				<f:facet name="footer">
+					<p:commandButton value="Selecionar" update=":frmCaderneta"
+						onclick="PF('dlgPesqPaciente').close();"
+						action="#{vacinacaoBean.findPacientePorNome}">
+					</p:commandButton>
+				</f:facet>
+			</p:dataTable>
+		</h:form>
+	</p:dialog>
+</h:body>
+</html>

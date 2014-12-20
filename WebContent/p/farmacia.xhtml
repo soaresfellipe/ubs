@@ -1,0 +1,119 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<title>Farmacia - UBS+ Web</title>
+</h:head>
+
+<h:body>
+
+	<h:outputStylesheet library="css" name="ubs.css" />
+	<ui:include src="/WEB-INF/cabecalho.xhtml" />
+
+	<h:form id="principal">
+
+		<p:growl id="message" showDetail="true" life="3000" sticky="false" />
+
+		<div style="height: 30px"></div>
+		<div style="height: 50px">
+
+			<p:growl id="growl" life="2000" />
+			<p:commandButton value="Retirar medicamento sem receita" id="ajax"
+				update="growl"
+				action="farmacia-retirar-sem-receita?faces-redirect=true"
+				styleClass="ui-priority-primary" />
+		</div>
+
+		<!--  Tabela de medicamentos a serem retirados -->
+
+		<p:commandButton value="Atualizar Lista" id="btAtualiza"
+			action="#{farmaciaBean.atualizaLista}" update=":dtReceitasPendentes"
+			ajax="false" />
+
+		<p:dataTable id="dtReceitasPendentes"
+			value="#{farmaciaBean.listaReceitas}"
+			selection="#{farmaciaBean.receitaSelecionada}" selectionMode="single"
+			rowKey="#{receita.id}" var="receita">
+			<f:facet name="header">
+				<p:outputLabel value="Medicamentos a serem retirados" />
+			</f:facet>
+
+
+			<!-- Coluna código  -->
+			<p:column headerText="Código" style="width:60px;text-align: center">
+				<h:outputText value="#{receita.id}" />
+			</p:column>
+
+			<!-- Coluna nome do paciente  -->
+			<p:column headerText="Paciente">
+				<h:outputText value="#{receita.paciente.pessoa.nome}" />
+			</p:column>
+
+			<!-- Coluna nome do Médico  -->
+			<p:column headerText="Médico">
+				<h:outputText value="#{receita.agenda.medico.pessoa.nome}" />
+			</p:column>
+
+			<!-- Coluna nome do Medicamento -->
+			<p:column headerText="Medicamento">
+				<h:outputText value="#{receita.medicamento.nome}" />
+			</p:column>
+
+			<!-- Coluna Classificação-->
+			<p:column headerText="Medicamento">
+				<h:outputText value="#{receita.medicamento.classificacao}" />
+			</p:column>
+
+			<!-- Botão para retirar -->
+			<f:facet name="footer">
+				<p:commandButton value="" id="btChamaRetirada"
+					onclick="PF('dlgRetirarMedicamento').show();"
+					icon="ui-icon-carat-1-e">
+				</p:commandButton>
+			</f:facet>
+		</p:dataTable>
+
+	</h:form>
+
+	<!-- Formulário para retirar o medicamento -->
+	<p:dialog header="Retirar Medicamento"
+		widgetVar="dlgRetirarMedicamento" modal="true">
+		<h:form id="frmRetirar">
+			<p:dataTable id="dtQuant" value="#{farmaciaBean.listaReceitas}"
+				selection="#{farmaciaBean.receitaSelecionada}" var="receita">
+
+				<p:column headerText="Quantidade solicitada na receita">
+					<h:outputText value="#{receita.quant}" size="5" />
+				</p:column>
+
+				<p:column headerText=" Quantidade em estoque">
+					<h:outputText value="#{receita.medicamento.quantAtual}" size="5" />
+				</p:column>
+			</p:dataTable>
+
+			<br />
+			<p:commandButton value="Salvar" id="btSalvarAlt"
+				action="#{farmaciaBean.retirarMedicamentoSemReceita}"
+				onsuccess="PF('dlgRetirarMedicamento').close();"
+				update=":principal,:principal:message" icon="ui-icon-disk">
+			</p:commandButton>
+
+			<p:commandButton value="Cancelar" id="btCancelar" update=":principal"
+				onclick="PF('dlgRetirarMedicamento').close();" icon="ui-icon-close"
+				ajax="false">
+			</p:commandButton>
+
+		</h:form>
+	</p:dialog>
+
+
+	<ui:include src="/WEB-INF/rodape.xhtml" />
+</h:body>
+</html>

@@ -1,0 +1,156 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"  
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:head>
+
+	<title>UBS - UBS+ Web</title>
+</h:head>
+<h:body>
+	<h:outputStylesheet library="css" name="ubs.css" />
+	<ui:include src="/WEB-INF/cabecalho.xhtml" />
+
+	<h3 id="titulopagina">UBS</h3>
+
+	<h:form id="frmPrincipal">
+
+		<p:growl id="message" showDetail="true" life="3000" sticky="false" />
+
+		<p:dataTable id="idResultadoBusca" style="width:700px"
+			paginator="true" rows="10" value="#{ubsBean.listarUBS}" var="esp"
+			editable="true">
+
+			<p:ajax event="rowEdit" listener="#{ubsBean.onRowEdit}"
+				update="idResultadoBusca, :frmPrincipal:message" />
+			<p:ajax event="rowEditCancel" listener="#{ubsBean.onRowCancel}"
+				update="idResultadoBusca,:frmPrincipal:message" />
+
+
+			<p:column headerText="Nome">
+				<p:cellEditor>
+					<f:facet name="output">
+						<h:outputText value="#{esp.nome}" />
+					</f:facet>
+					<f:facet name="input">
+						<h:inputText id="nome" value="#{esp.nome}" />
+					</f:facet>
+				</p:cellEditor>
+			</p:column>
+			<p:column headerText="Responsável">
+				<p:cellEditor>
+					<f:facet name="output">
+						<h:outputText value="#{esp.responsavel}" />
+					</f:facet>
+					<f:facet name="input">
+						<h:inputText id="resp" value="#{esp.responsavel}" />
+					</f:facet>
+				</p:cellEditor>
+			</p:column>
+			<p:column headerText="Localidade">
+				<p:cellEditor>
+					<f:facet name="output">
+						<h:outputText value="#{esp.localidade}" />
+					</f:facet>
+					<f:facet name="input">
+						<h:inputText id="loc" value="#{esp.localidade}" />
+					</f:facet>
+				</p:cellEditor>
+			</p:column>
+			<p:column headerText="Telefone">
+				<p:cellEditor>
+					<f:facet name="output">
+						<h:outputText value="#{esp.telefone}" />
+					</f:facet>
+					<f:facet name="input">
+						<h:inputText id="tel" value="#{esp.telefone}" />
+					</f:facet>
+				</p:cellEditor>
+			</p:column>
+			<p:column headerText="Data Início">
+				<p:cellEditor>
+					<f:facet name="output">
+						<p:calendar mask="99-99-9999" pattern="dd-MM-yyyy" size="14"
+							maxlenght="8" value="#{esp.dtInicio}" />
+					</f:facet>
+					<f:facet name="input">
+						<p:calendar id="dtini" mask="99-99-9999" pattern="dd-MM-yyyy"
+							size="10" maxlenght="8" value="#{esp.dtInicio}" />
+					</f:facet>
+				</p:cellEditor>
+			</p:column>
+			<p:column headerText="Data Encerramento">
+				<p:cellEditor>
+					<f:facet name="output">
+						<p:calendar mask="99-99-9999" pattern="dd-MM-yyyy" size="14"
+							maxlenght="8" value="#{esp.dtEncerramento}" />
+					</f:facet>
+					<f:facet name="input">
+						<p:calendar id="dtend" mask="99-99-9999" pattern="dd-MM-yyyy"
+							size="10" maxlenght="8" value="#{esp.dtEncerramento}" />
+					</f:facet>
+				</p:cellEditor>
+			</p:column>
+			<p:column headerText="Data Cadastro">
+				<p:calendar mask="99-99-9999" pattern="dd-MM-yyyy" size="10"
+					maxlenght="8" value="#{esp.dtCadastro}" disabled="true" />
+			</p:column>
+
+
+
+			<p:column style="width:32px">
+				<p:rowEditor />
+			</p:column>
+
+
+			<f:facet name="footer">
+				<p:commandButton id="btChamaDlgCadastro" value="Novo Item"
+					onclick="PF('dlgCadastro').show();" />
+			</f:facet>
+
+		</p:dataTable>
+	</h:form>
+
+	<p:dialog header="Cadastro" widgetVar="dlgCadastro" modal="true"
+		draggable="FALSE" resizable="FALSE">
+		<h:form id="frmCadastro">
+			<p:panelGrid columns="2">
+				<p:outputLabel id="lbNome" value="Nome:" />
+				<p:inputText id="txtNome" value="#{ubsBean.ubs.nome}" />
+
+				<p:outputLabel id="lbLocalidade" value="Localidade" />
+				<p:inputText id="txtLocalidade" value="#{ubsBean.ubs.localidade}" />
+
+				<p:outputLabel id="lbResp" value="Responsável" />
+				<p:inputText id="txtResp" value="#{ubsBean.ubs.responsavel}" />
+
+				<p:outputLabel id="lbdtinicio" value="Data Início " />
+				<p:calendar id="txtdtinicio" mask="99-99-9999" pattern="dd-MM-yyyy"
+					size="14" maxlenght="8" value="#{ubsBean.ubs.dtInicio}" />
+
+				<p:outputLabel id="lbdtend" value="Data Encerramento " />
+				<p:calendar id="txtdtend" mask="99-99-9999" pattern="dd-MM-yyyy"
+					size="14" maxlenght="8" value="#{ubsBean.ubs.dtEncerramento}" />
+
+				<p:outputLabel id="lbTel" value="Telefone: " />
+				<p:inputText id="txtTel" value="#{ubsBean.ubs.telefone}" />
+
+			</p:panelGrid>
+			<p:toolbar>
+				<f:facet name="left">
+					<p:commandButton id="btSalvar" value="Salvar"
+						update=":frmPrincipal:message" ajax="false"
+						actionListener="#{ubsBean.salvar}" onclick="dlgCadastro.close()">
+					</p:commandButton>
+				</f:facet>
+			</p:toolbar>
+
+		</h:form>
+	</p:dialog>
+
+	<ui:include src="/WEB-INF/rodape.xhtml" />
+</h:body>
+</html>

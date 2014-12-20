@@ -1,0 +1,71 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:head>
+	<title>Produtos - UBS+ Web</title>
+</h:head>
+<h:body>
+	<h:outputStylesheet library="css" name="ubs.css" />
+	<ui:include src="/WEB-INF/cabecalho.xhtml" />
+	<h:form id="frm">
+
+		<p:growl id="message" showDetail="true" life="3000" sticky="false" />
+
+		<h3 id="titulopagina">Cadastro de Produtos</h3>
+
+		<p:panelGrid columns="2">
+			<p:outputLabel for="nome" value="Nome: " />
+			<p:inputText id="nome" value="#{produtoMedicamentoBean.prod.nome}" />
+
+			<p:outputLabel for="dtvalidade" value="Data de Validade: " />
+			<p:calendar id="dtvalidade"
+				value="#{produtoMedicamentoBean.prod.dtValidade}"></p:calendar>
+
+			<p:outputLabel for="unidademed" value="Unidade de Medida: " />
+			<p:selectOneMenu id="unidademed"
+				value="#{produtoMedicamentoBean.prod.unidadeMedida}">
+				<f:selectItem itemLabel="Selecione unidade de medida"
+					noSelectionOption="true" />
+				<f:selectItem itemLabel="Comprimido" itemValue="comprimido(s)" />
+				<f:selectItem itemLabel="Cartela" itemValue="cartela(s)" />
+				<f:selectItem itemLabel="Caixa" itemValue="caixa(s)" />
+				<f:selectItem itemLabel="Unidade" itemValue="unidade(s)" />
+			</p:selectOneMenu>
+
+			<p:outputLabel for="quantatual" value="Quantidade Atual " />
+			<p:inputText id="quantatual"
+				value="#{produtoMedicamentoBean.prod.quantAtual}" />
+
+			<p:outputLabel for="quantmin" value="Quantidade Mínima " />
+			<p:inputText id="quantmin"
+				value="#{produtoMedicamentoBean.prod.quantMin}" />
+
+
+			<p:outputLabel for="ubs" value="Medicamento destinado à UBS: " />
+			<p:selectOneMenu id="ubs" value="#{produtoMedicamentoBean.ubs.id}">
+				<f:selectItem itemLabel="Selecionar a UBS" itemValue=""
+					noSelectionOption="false" />
+				<f:selectItems value="#{produtoMedicamentoBean.listaUBS}" var="ubs"
+					itemLabel="#{ubs.nome}" itemValue="#{ubs.id}" />
+			</p:selectOneMenu>
+			<f:facet name="footer">
+				<center>
+					<p:commandButton id="cmdsalvar" value="Salvar"
+						update=":frm,:frm:message"
+						action="#{produtoMedicamentoBean.salvar()}">
+					</p:commandButton>
+				</center>
+			</f:facet>
+		</p:panelGrid>
+
+
+
+	</h:form>
+	<ui:include src="/WEB-INF/rodape.xhtml" />
+</h:body>
+</html>

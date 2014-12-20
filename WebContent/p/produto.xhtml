@@ -1,0 +1,149 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:head>
+	<title>Pesquisa Produtos - UBS+ Web</title>
+</h:head>
+<h:body>
+	<h:outputStylesheet library="css" name="ubs.css" />
+	<ui:include src="/WEB-INF/cabecalho.xhtml" />
+
+	<h3 id="titulopagina">Pesquisa Produtos</h3>
+
+	<h:form id="frm">
+
+		<p:growl widgetVar="message" life="3000" sticky="false" />
+
+		<p:panel id="pnl2" visible="#{produtoMedicamentoBean.habilitaBusca3}">
+			<!--  Campo Nome busca-->
+
+			<p:focus />
+			<h:outputLabel for="idnome" value="Pesquisar por Nome: "
+				style="font-size: 20px; text-decoration: bold;" />
+
+			<p:inputText maxlenght="50" size="50" id="idnome" required="FALSE"
+				value="#{produtoMedicamentoBean.nome}">
+				<p:ajax event="keyup"
+					listener="#{produtoMedicamentoBean.findByNome()}"
+					update="resultadoBusca" />
+			</p:inputText>
+
+			<p:spacer height="25" />
+
+			<!--  Botão Incluir Produto -->
+			<p:commandButton value="Inserir Novo Produto"
+				action="produto-cadastro.xhtml?faces-redirect=true"
+				icon="ui-icon-plus" ajax="false">
+			</p:commandButton>
+			
+			<!--  Botão Retirar Produto -->
+			<p:commandButton value="Retirar Produto"
+				action="produto-retirar.xhtml?faces-redirect=true"
+				icon="ui-icon-plus" ajax="false">
+			</p:commandButton>
+
+
+			<br />
+
+			<br />
+			<br />
+			<!--  Tabela com resultado da busca por nome -->
+			<p:dataTable id="resultadoBusca"
+				value="#{produtoMedicamentoBean.listaProdutos}" var="prod"
+				selection="#{produtoMedicamentoBean.prod}" selectionMode="single"
+				rowKey="#{prod.id}">
+
+
+				<f:facet name="header">  
+            	Click na linha e depois click em "Mais" para ver detalhes  
+        	</f:facet>
+				<p:column headerText="Nome">
+					<h:outputText value="#{prod.nome}" />
+				</p:column>
+				<p:column headerText="Data Validade">
+					<h:outputText value="#{prod.dtValidade}">
+						<f:convertDateTime pattern="dd/MM/yyyy" />
+					</h:outputText>
+				</p:column>
+				<p:column headerText="Quantidade Atual">
+					<h:outputText value="#{prod.quantAtual},#{prod.unidadeMedida}" />
+				</p:column>
+				<p:column headerText="Quantidade Mínima">
+					<h:outputText value="#{prod.quantMin},#{prod.unidadeMedida}" />
+				</p:column>
+
+
+				<f:facet name="footer">
+					<p:commandButton value="Mais"
+						actionListener="#{produtoMedicamentoBean.mudaCampos()}"
+						update=":frm">
+					</p:commandButton>
+				</f:facet>
+			</p:dataTable>
+
+		</p:panel>
+
+		<p:panel header="Produto"
+			visible="#{produtoMedicamentoBean.habilitaBusca2}" id="pnlEdit">
+			<p:panelGrid columns="2">
+
+				<p:outputLabel for="nome" value="Nome: " />
+				<p:inputText id="nome" value="#{produtoMedicamentoBean.prod2.nome}" />
+
+				<p:outputLabel for="dtvalidade" value="Data de Validade: " />
+				<p:calendar id="dtvalidade"
+					value="#{produtoMedicamentoBean.prod2.dtValidade}"></p:calendar>
+
+				<p:outputLabel for="unidademed" value="Unidade de Medida: " />
+				<p:selectOneMenu id="unidademed"
+					value="#{produtoMedicamentoBean.unidadeMedida}">
+					<f:selectItem itemLabel="comprimido" itemValue="comprimido(s)" />
+					<f:selectItem itemLabel="cartela" itemValue="cartela(s)" />
+					<f:selectItem itemLabel="caixa" itemValue="caixa(s)" />
+					<f:selectItem itemLabel="unidade" itemValue="unidade(s)" />
+				</p:selectOneMenu>
+
+				<p:outputLabel for="quantatual" value="Quantidade Atual " />
+				<p:inputText id="quantatual"
+					value="#{produtoMedicamentoBean.prod2.quantAtual}" />
+
+				<p:outputLabel for="quantmin" value="Quantidade Mínima " />
+				<p:inputText id="quantmin"
+					value="#{produtoMedicamentoBean.prod2.quantMin}" />
+
+				<p:outputLabel for="classificacao"
+					value="Classificação do medicamento: "
+					rendered="#{produtoMedicamentoBean.habilitaBusca}" />
+				<p:selectOneMenu id="classificacao"
+					rendered="#{produtoMedicamentoBean.habilitaBusca}"
+					value="#{produtoMedicamentoBean.med.classificacao}">
+					<f:selectItem itemLabel="tarja preta" itemValue="1" />
+					<f:selectItem itemLabel="tarja 2" itemValue="2" />
+					<f:selectItem itemLabel="tarja 3" itemValue="3" />
+				</p:selectOneMenu>
+
+			</p:panelGrid>
+			<p:toolbar style="width:290px;">
+				<f:facet name="left">
+					<p:commandButton id="cmdsalvar" value="Salvar"
+						action="produto.xhtml?faces-redirect=true"
+						actionListener="#{produtoMedicamentoBean.editar()}" ajax="false">
+					</p:commandButton>
+				</f:facet>
+				<f:facet name="right">
+					<p:commandButton id="cmdexcluir" value="Excluir"
+						action="produto.xhtml?faces-redirect=true" update="message"
+						actionListener="#{produtoMedicamentoBean.excluir()}" ajax="false" />
+				</f:facet>
+			</p:toolbar>
+		</p:panel>
+	</h:form>
+
+	<ui:include src="/WEB-INF/rodape.xhtml" />
+</h:body>
+</html>

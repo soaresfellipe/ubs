@@ -1,0 +1,23 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+	<div id="rodape" align="left">
+	<p:separator />
+		<font face="Calibri"><b>UBS+ Web</b><br /> <font size="2">Desenvolvido
+				por Flávia Arrais, Francisco Jardel, Samanta Jacques e Fellipe
+				Soares</font></font>
+	</div>
+
+	<!-- @Fellipe: Monitora sessão inativa -->
+	<p:idleMonitor id="monitorExpira" timeout="1800000" onidle="PF('dlgAlertaExpirada').show()" >
+		<p:ajax event="idle" listener="#{login.timeout}" />
+	</p:idleMonitor>
+
+	<!-- @Fellipe: Dialog para avisar o usuário quanto a sessão expira -->
+	<p:dialog id="dlgAlertaExpirada" widgetVar="dlgAlertaExpirada"
+		modal="TRUE" draggable="FALSE" resizable="FALSE" closable="FALSE" header="Sessão expirada">
+    	Sua sessão foi expirada.
+	</p:dialog>
+</ui:composition>

@@ -1,0 +1,222 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:head>
+	<title>Agendamento de Horários - UBS+ Web</title>
+</h:head>
+<h:body>
+	<h:outputStylesheet library="css" name="ubs.css" />
+	<ui:include src="/WEB-INF/cabecalho.xhtml" />
+
+	<h3 id="titulopagina">Agendamento de Horários de Médico na UBS</h3>
+
+	<h:form id="registradorHorario">
+		<p:growl widgetVar="message" life="3000" sticky="false" />
+
+		<!-- Informações Adicionais -->
+		<b><p:outputLabel style="font: bold;"
+				value="Informações Adicionais:" /></b>
+		<br />
+		<p:outputLabel
+			value="Passo 1: Selecione UBS, Especialidade e Médico antes de definir horários." />
+		<br />
+		<p:outputLabel
+			value="Passo 2: Selecione a data para qual será realizada as gerações,
+			 horário de início, horário final e duração das consultas." />
+		<br />
+		<p:outputLabel
+			value="Passo 3: Informe o período de intervalo do dia (se houver)." />
+		<br />
+		<br />
+
+		<!-- Selecionar a UBS -->
+		<p:outputLabel for="ubs" value="UBS: " />
+		<p:inputText id="ubs" value="#{agendaBean.ubs.nome}" />
+		<p:commandButton id="pesqUBS" value="Selecionar UBS"
+			action="#{agendaBean.findUBS}" icon="ui-icon-search"
+			onclick="PF('dlgPesquisaUBS').show();" />
+		<p:spacer width="25" />
+
+		<!-- Selecionar a Especialidade -->
+		<p:outputLabel for="espec" value="Especialidade: " />
+		<p:inputText id="espec" value="#{agendaBean.esp.nome}" />
+		<p:commandButton id="pesqEspec" value="Selecionar Especialidade"
+			icon="ui-icon-search" onclick="PF('dlgPesquisaEspec').show();" />
+		<p:spacer width="25" />
+
+		<!-- Selecionar o Médico -->
+		<p:outputLabel for="medico" value="Médico: " />
+		<p:inputText id="medico" value="#{agendaBean.nomeMedico}" />
+		<p:commandButton id="pesqMedico" value="Selecionar Médico"
+			icon="ui-icon-search" onclick="PF('dlgPesquisaMedico').show();" />
+
+		<br />
+		<br />
+
+		<!-- Campo da Data da Consulta -->
+		<b><p:outputLabel style="font: bold;" value="Agendamento:" /></b>
+		<br />
+		<p:outputLabel for="dataAgenda" value="Data para Geração de Agenda: " />
+		<p:calendar id="dataAgenda" value="#{agendaBean.data}" locale="pt_BR"
+			pattern="dd/MM/yyyy" mask="true" showButtonPanel="true"
+			navigator="true" yearRange="2014:2300" />
+		<p:spacer width="25" />
+
+
+
+		<!-- Campo da Hora Início -->
+		<p:outputLabel for="horaInicio" value="Hora Início: " />
+		<p:calendar id="horaInicio" value="#{agendaBean.horaInicio}"
+			mask="99:99" timeOnly="TRUE" pattern="HH:mm" maxlength="4" size="4" />
+		<p:spacer width="25" />
+
+		<!-- Campo da Hora Fim -->
+		<p:outputLabel for="horaFim" value="Hora Fim: " />
+		<p:calendar id="horaFim" value="#{agendaBean.horaFim}" mask="99:99"
+			timeOnly="TRUE" pattern="HH:mm" maxlength="4" size="4" />
+		<p:spacer width="25" />
+
+		<!-- Campo do Paciente -->
+		<p:outputLabel for="nomePaciente" value="Paciente: " />
+		<p:inputText id="nomePaciente" readonly="TRUE"
+			value="#{agendaBean.paciente.pessoa.nome}" maxlenght="50" size="50" />
+		<p:commandButton id="pesqPaciente" value="Selecionar Paciente"
+			icon="ui-icon-search" onclick="PF('dlgPesquisaPaciente').show();" />
+		<p:spacer width="25" />
+		<br />
+	
+
+		<!-- Botão de Gerar Agenda -->
+		<br />
+		<br />
+		<p:commandButton id="gerarAgenda" value="Salvar Dados" 
+			action="#{agendaBean.gerarAgendaEncaixe}" icon="ui-icon-calendar"
+			ajax="false" update="registradorHorario,message">
+			<p:resetInput target="registradorHorario">
+			</p:resetInput>
+		</p:commandButton>
+
+	</h:form>
+
+	<p:dialog id="dlgPesquisaUBS" header="Pesquisa de UBS"
+		widgetVar="dlgPesquisaUBS" height="400" width="750" modal="TRUE"
+		draggable="FALSE" resizable="FALSE">
+		<h:form id="pesqUBS">
+
+			<p:spacer width="25" />
+			<p:outputLabel for="localPesq" value="Localidade da UBS: " />
+
+			<p:inputText id="localPesq" value="#{agendaBean.localidade}">
+				<p:ajax event="keyup" listener="#{agendaBean.findUBS()}"
+					update="buscaUBS" />
+			</p:inputText>
+
+			<p:spacer width="25" />
+
+			<br />
+			<p:dataTable id="buscaUBS" value="#{agendaBean.listaUBS}" var="ubs"
+				selection="#{agendaBean.ubs}" selectionMode="single"
+				rowKey="#{ubs.id}">
+				<p:column headerText="Nome:">
+					<h:outputText value="#{ubs.nome}" />
+				</p:column>
+				<p:column headerText="Localidade:">
+					<h:outputText value="#{ubs.localidade}" />
+				</p:column>
+				<f:facet name="footer">
+					<p:commandButton value="Escolher" update=":registradorHorario"
+						onclick="PF('dlgPesquisaUBS').close();"
+						action="#{agendaBean.findUBS()}">
+					</p:commandButton>
+				</f:facet>
+			</p:dataTable>
+		</h:form>
+	</p:dialog>
+
+	<p:dialog id="dlgPesquisaEspec" header="Pesquisa de Especialidade"
+		widgetVar="dlgPesquisaEspec" height="400" width="500" modal="TRUE"
+		draggable="FALSE" resizable="FALSE">
+		<h:form id="pesqEspec">
+			<p:dataTable value="#{agendaBean.listEsp}" var="esp"
+				selection="#{agendaBean.esp}" selectionMode="single"
+				rowKey="#{esp.id}">
+				<p:column headerText="Especialidade:">
+					<h:outputText value="#{esp.nome}" />
+				</p:column>
+				<f:facet name="footer">
+					<p:commandButton value="Escolher" update=":registradorHorario"
+						onclick="PF('dlgPesquisaEspec').close();"
+						action="#{agendaBean.findUBS()}">
+					</p:commandButton>
+				</f:facet>
+			</p:dataTable>
+		</h:form>
+	</p:dialog>
+
+	<p:dialog id="dlgPesquisaMedico" header="Pesquisa de Médico"
+		widgetVar="dlgPesquisaMedico" height="400" width="600" modal="TRUE"
+		draggable="FALSE" resizable="FALSE">
+		<h:form id="pesqMedico">
+			<p:dataTable value="#{agendaBean.listaMed}" var="med"
+				selection="#{agendaBean.medico}" selectionMode="single"
+				rowKey="#{med.id}">
+				<p:column headerText="Médicos:">
+					<h:outputText value="#{med.pessoa.nome}" />
+				</p:column>
+				<p:column headerText="CRM">
+					<h:outputText value="#{med.crm}" />
+				</p:column>
+				<p:column headerText="UF Conselho">
+					<h:outputText value="#{med.ufConselho}" />
+				</p:column>
+				<f:facet name="footer">
+					<p:commandButton value="Escolher" update=":registradorHorario"
+						onclick="PF('dlgPesquisaMedico').close();"
+						action="#{agendaBean.findUBS()}">
+					</p:commandButton>
+				</f:facet>
+			</p:dataTable>
+		</h:form>
+	</p:dialog>
+	<p:dialog id="dlgPesquisaPaciente" header="Pesquisa de Paciente"
+		widgetVar="dlgPesquisaPaciente" height="400" width="600" modal="TRUE"
+		draggable="FALSE" resizable="FALSE">
+		<h:form id="pesqPaciente">
+
+			<p:spacer width="25" />
+			<p:outputLabel for="nomePaciente" value="Nome Paciente: " />
+
+			<p:inputText id="nomePaciente" value="#{agendaBean.nomePaciente}">
+				<p:ajax event="keyup" listener="#{agendaBean.buscaPacienteEncaixe}"
+					update="buscaPaciente" />
+			</p:inputText>
+
+			<p:spacer width="25" />
+			<p:dataTable id="buscaPaciente" value="#{agendaBean.listPaciente}"
+				var="pac" selection="#{agendaBean.paciente}" selectionMode="single"
+				rowKey="#{pac.id}">
+				<p:column headerText="Nome">
+					<h:outputText value="#{pac.pessoa.nome}" />
+				</p:column>
+				<p:column headerText="COD_SUS">
+					<h:outputText value="#{pac.cns}" />
+				</p:column>
+				<p:column headerText="CPF">
+					<h:outputText value="#{pac.pessoa.cpf}" />
+				</p:column>
+				<f:facet name="footer">
+					<p:commandButton value="Escolher" update=":registradorHorario"
+						onclick="PF('dlgPesquisaPaciente').close();">
+					</p:commandButton>
+				</f:facet>
+			</p:dataTable>
+		</h:form>
+	</p:dialog>
+	<ui:include src="/WEB-INF/rodape.xhtml" />
+</h:body>
+</html>

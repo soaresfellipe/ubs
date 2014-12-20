@@ -1,0 +1,372 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:head>
+	<title>Agenda do Dia - UBS+ Web</title>
+</h:head>
+<h:body>
+	<h:outputStylesheet library="css" name="ubs.css" />
+	<ui:include src="/WEB-INF/cabecalho.xhtml" />
+
+	<h:form id="principal">
+
+		<p:growl id="message" showDetail="true" life="3000" sticky="false" />
+
+		<p:outputLabel value="Busca por data" />
+		<p:calendar value="#{agendaBean.data}" pattern="dd/MM/yyyy" />
+
+		<p:commandButton value="Atualizar"
+			action="#{agendaBean.atualizaConsultasMedico}"
+			update="resultadoBusca" />
+		<br />
+		<!-- 			<p:inputText /> -->
+		<br />
+
+		<p:panel id="pnlprincipal" visible="#{agendaBean.habilitaP1}">
+
+			<p:outputLabel value="Agenda do Dia" />
+			<br />
+			<br />
+			<p:dataTable id="resultadoBusca" value="#{agendaBean.agendaMedico}"
+				selection="#{agendaBean.agenda}" selectionMode="single"
+				rowKey="#{agenda.id}" var="agenda">
+
+				<p:column headerText="Data">
+					<p:calendar value="#{agenda.data}" pattern="dd/MM/yyyy"
+						readonly="true" size="5" />
+				</p:column>
+				<p:column headerText="Hora Início">
+					<p:calendar value="#{agenda.horaInicio}" pattern="HH:mm"
+						readonly="true" size="5" />
+				</p:column>
+				<p:column headerText="Paciente">
+					<h:outputText value="#{agenda.paciente.pessoa.nome}" />
+				</p:column>
+				<p:column headerText="Especialidade">
+					<h:outputText value="#{agenda.especialidade.nome}" />
+				</p:column>
+				<p:column headerText="Status">
+					<h:outputText value="#{agenda.status}" />
+				</p:column>
+
+				<f:facet name="footer">
+					<p:commandButton value="Iniciar Consulta"
+						action="#{agendaBean.habilitaPanel}" update=":principal">
+					</p:commandButton>
+				</f:facet>
+			</p:dataTable>
+
+		</p:panel>
+
+		<p:panel id="pnlDetalhe" visible="#{agendaBean.habilitaP2}">
+			<p:panelGrid columns="10">
+
+				<p:outputLabel value="Paciente" />
+				<p:columnGroup>
+					<p:inputText id="paciente" rendered="#{agendaBean.habilitaP2}"
+						value="#{agendaBean.agenda.paciente.pessoa.nome}" disable="true" />
+
+
+				</p:columnGroup>
+
+				<p:outputLabel value="Hora Início" />
+				<p:calendar value="#{agendaBean.agenda.horaInicio}" pattern="HH:mm"
+					rendered="#{agendaBean.habilitaP2}" readonly="true" size="5" />
+
+				<p:outputLabel value="Hora Fim" />
+				<p:calendar value="#{agendaBean.agenda.horaFim}" pattern="HH:mm"
+					rendered="#{agendaBean.habilitaP2}" readonly="true" size="5" />
+
+				<p:outputLabel value="Médico" />
+				<p:inputText id="medico" rendered="#{agendaBean.habilitaP2}"
+					value="#{agendaBean.agenda.medico.pessoa.nome}" />
+
+				<p:outputLabel value="Especialidade" />
+				<p:inputText id="esp" rendered="#{agendaBean.habilitaP2}"
+					value="#{agendaBean.agenda.especialidade.nome}" />
+			</p:panelGrid>
+
+			<br />
+			<br />
+
+			<p:outputLabel value="Descrição Prontuário*" />
+			<br />
+			<br />
+			<p:inputTextarea id="desc" value="#{agendaBean.desc}"
+				autoResize="true" rows="25" cols="65"></p:inputTextarea>
+
+			<br />
+			<br />
+
+			<p:toolbar style="width:420px;">
+				<f:facet name="left">
+					<p:commandButton value="Histórico" id="btHist" icon="ui-icon-disk">
+						<p:ajax event="click" update=":dlgHist"
+							listener="#{agendaBean.buscaHistorico}"
+							onsuccess="PF('dlgHist').show()" />
+					</p:commandButton>
+				</f:facet>
+				<f:facet name="left">
+					<p:commandButton value="Nova Receita" id="btRec"
+						onclick="PF('dlgNovaReceita').show();" update=":frmNovaReceita">
+					</p:commandButton>
+				</f:facet>
+				<f:facet name="right">
+					<p:commandButton value="Novo Exame" id="btExa"
+						onclick="PF('dlgNovoExame').show();">
+					</p:commandButton>
+					<f:facet name="right">
+						<p:commandButton value="Encerrar consulta" id="btEnd"
+							action="#{agendaBean.encerrarConsulta}" ajax="false">
+						</p:commandButton>
+
+					</f:facet>
+				</f:facet>
+			</p:toolbar>
+
+		</p:panel>
+
+
+	</h:form>
+
+
+	<p:dialog header="Histórico" widgetVar="dlgHist" modal="true">
+		<h:form id="dlgHist">
+
+			<p:tabView id="tabProntuario">
+
+				<p:ajax event="tabChange" listener="#{agendaBean.buscaHistorico}"
+					update="tabProntuario" />
+
+				<p:tab title="ProntuÃ¡rio">
+
+					<p:dataTable id="buscaProntuario"
+						value="#{agendaBean.listaDescProntuario}"
+						selection="#{agendaBean.descricao}" rowKey="#{desc.id}" var="desc">
+						<p:column headerText="Data">
+							<p:calendar value="#{desc.data}" readonly="true" />
+						</p:column>
+						<p:column headerText="Descriçãoo">
+							<h:outputText value="#{desc.descricao}" />
+						</p:column>
+					</p:dataTable>
+
+				</p:tab>
+
+				<p:tab title="Receitas">
+
+					<p:dataTable id="buscaReceita"
+						value="#{agendaBean.listaRecProntuario}"
+						selection="#{agendaBean.receita}" selectionMode="single"
+						rowKey="#{rec.id}" var="rec">
+
+						<p:column headerText="Data solicitaçãoo">
+							<h:outputText value="#{rec.dtCriacao}" />
+						</p:column>
+						<p:column headerText="Data validade">
+							<h:outputText value="#{rec.dtValidade}" />
+						</p:column>
+						<p:column headerText="Descriçãoo">
+							<h:outputText value="#{rec.descricao}" />
+						</p:column>
+						<p:column headerText="Status">
+							<h:outputText value="#{rec.status}" />
+						</p:column>
+						<p:column headerText="Medicamento">
+							<h:outputText value="#{rec.medicamento.nome}" />
+						</p:column>
+						<p:column headerText="Quantidade">
+							<h:outputText value="#{rec.quant}" />
+						</p:column>
+						<p:column headerText="Unidade Medida">
+							<h:outputText value="#{rec.medicamento.unidadeMedida}" />
+						</p:column>
+						<f:facet name="footer">
+							<p:commandButton value="Gerar Receita para Impressão"
+								action="#{relatorioBean.receitaExterna(agendaBean.receita)}"
+								ajax="false"></p:commandButton>
+						</f:facet>
+					</p:dataTable>
+				</p:tab>
+
+				<p:tab title="Exames">
+
+					<p:dataTable id="buscaExame"
+						value="#{agendaBean.listaExameProntuario}"
+						selection="#{agendaBean.exame}" selectionMode="single"
+						rowKey="#{exame.id}" var="exame">
+
+						<p:column headerText="Data solicitação">
+							<h:outputText value="#{exame.dtCriacao}" />
+						</p:column>
+						<p:column headerText="Data Realização">
+							<h:outputText value="#{exame.dtRealizacao}" />
+						</p:column>
+						<p:column headerText="Procedimento">
+							<h:outputText value="#{exame.procedimento.nome}" />
+						</p:column>
+						<p:column headerText="Status">
+							<h:outputText value="#{exame.status}" />
+						</p:column>
+					</p:dataTable>
+				</p:tab>
+			</p:tabView>
+
+		</h:form>
+	</p:dialog>
+
+
+	<p:dialog header="Nova Receita" widgetVar="dlgNovaReceita" modal="true">
+		<h:form id="frmNovaReceita">
+
+			<p:tabView id="tabReceita" dynamic="true">
+
+				<p:ajax event="tabChange" listener="#{agendaBean.onTabChange}"
+					update="tabReceita" />
+
+
+				<p:tab title="Outras Farmácias">
+					<p:panelGrid columns="2">
+						<p:outputLabel value="Data validade" />
+
+						<p:calendar value="#{agendaBean.data}" />
+
+						<p:outputLabel value="Descrição" />
+						<p:inputTextarea autoResize="true" value="#{agendaBean.descNew}"
+							rows="20" cols="50" />
+					</p:panelGrid>
+				</p:tab>
+
+				<p:tab title="Rede de UBS">
+					<p:panelGrid columns="2">
+						<p:outputLabel value="Data validade" />
+						<p:calendar value="#{agendaBean.data}" id="dtubsRede" />
+
+						<p:outputLabel value="Medicamento" />
+
+						<p:selectOneMenu id="medicamentoUBSRede"
+							value="#{agendaBean.medicamento.id}">
+							<f:selectItem itemLabel="Selecionar Medicamento" itemValue=""
+								noSelectionOption="true" />
+							<f:selectItems value="#{agendaBean.listaMedicamento}" var="med"
+								itemValue="#{med.id}" itemLabel="#{med.nome}" />
+							<p:ajax event="change" listener="#{agendaBean.onChange}"
+								update="uMedidaUBSRede, atdRede" />
+						</p:selectOneMenu>
+
+						<p:outputLabel value="Unidade de Medida" />
+						<p:inputText id="uMedidaUBSRede" disabled="true"
+							value="#{agendaBean.medicamento.unidadeMedida}" />
+
+						<p:outputLabel value="Quantidade" />
+						<p:inputText value="#{agendaBean.quant}" />
+
+						<p:outputLabel value="Tipo atendimento" />
+						<p:selectOneMenu id="atdRede" value="#{agendaBean.tipoAtend}">
+							<f:selectItem itemLabel="Selecionar Tipo" itemValue=""
+								noSelectionOption="true" />
+							<f:selectItem itemLabel="Rede UBS" itemValue="Farmácia Rede UBS" />
+							<p:ajax event="change" listener="#{agendaBean.onSelect}"
+								update="atdRede" />
+						</p:selectOneMenu>
+
+						<p:outputLabel value="DescriÃ§Ã£o" />
+						<p:inputTextarea autoResize="true" value="#{agendaBean.descNew}" />
+
+					</p:panelGrid>
+
+				</p:tab>
+
+				<p:tab title="UBS da Consulta">
+					<p:panelGrid columns="2">
+						<p:outputLabel value="Data validade" />
+						<p:calendar value="#{agendaBean.data}" id="dtubs" />
+
+						<p:outputLabel value="Medicamento" />
+
+						<p:selectOneMenu id="medicamentoUBS"
+							value="#{agendaBean.medicamento.id}">
+							<f:selectItem itemLabel="Selecionar Medicamento" itemValue=""
+								noSelectionOption="true" />
+							<f:selectItems value="#{agendaBean.listaMedicamento}" var="med"
+								itemValue="#{med.id}" itemLabel="#{med.nome}" />
+							<p:ajax event="change" listener="#{agendaBean.onChange}"
+								update="uMedidaUBS, atd" />
+						</p:selectOneMenu>
+
+						<p:outputLabel value="Unidade de Medida" />
+						<p:inputText id="uMedidaUBS" disabled="true"
+							value="#{agendaBean.medicamento.unidadeMedida}" />
+
+						<p:outputLabel value="Quantidade" />
+						<p:inputText value="#{agendaBean.quant}" />
+
+						<p:outputLabel value="Tipo atendimento" />
+						<p:selectOneMenu id="atd" value="#{agendaBean.tipoAtend}">
+							<f:selectItem itemLabel="Selecionar Tipo" itemValue=""
+								noSelectionOption="true" />
+							<f:selectItem itemLabel="Enfermaria" itemValue="Enfermaria" />
+							<f:selectItem itemLabel="FarmÃ¡cia UBS" itemValue="FarmÃ¡cia UBS" />
+							<p:ajax event="change" listener="#{agendaBean.onSelect}"
+								update="atd" />
+						</p:selectOneMenu>
+
+						<p:outputLabel value="Descrição" />
+						<p:inputTextarea autoResize="true" value="#{agendaBean.descNew}" />
+
+					</p:panelGrid>
+
+				</p:tab>
+
+			</p:tabView>
+
+			<p:commandButton value="Salvar receita"
+				onclick="PF('dlgNovaReceita').close();"
+				action="#{agendaBean.salvarReceita}" update="tabReceita" />
+
+			<p:commandButton value="Cancelar"
+				onclick="PF('dlgNovaReceita').close();"
+				action="#{agendaBean.cancelarReceita}" update=":principal:message" />
+		</h:form>
+	</p:dialog>
+
+
+	<p:dialog header="Novo Exame" widgetVar="dlgNovoExame" modal="true">
+		<h:form id="frmNovoExame">
+			<p:panelGrid columns="2">
+
+				<f:facet name="header">
+					<p:row>
+						<p:column colspan="1">
+							<p:outputLabel value="Data validade" />
+							<p:calendar value="#{agendaBean.data}" size="5" />
+
+							<p:outputLabel value="Procedimento" />
+							<p:selectOneMenu id="proc" value="#{agendaBean.proc.id}">
+								<f:selectItem itemLabel="Selecionar Tipo" itemValue=""
+									noSelectionOption="true" />
+								<f:selectItems value="#{agendaBean.listaProc}" var="proc"
+									itemValue="#{proc.id}" itemLabel="#{proc.nome}" />
+							</p:selectOneMenu>
+						</p:column>
+					</p:row>
+				</f:facet>
+			</p:panelGrid>
+
+
+			<p:commandButton value="Salvar Exame"
+				action="#{agendaBean.salvarExame}"
+				onclick="PF('dlgNovoExame').close();" update=":principal:message" />
+		</h:form>
+	</p:dialog>
+
+
+
+	<ui:include src="/WEB-INF/rodape.xhtml" />
+</h:body>
+</html>
